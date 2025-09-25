@@ -54,8 +54,8 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
   const [showPurchasePopup, setShowPurchasePopup] = useState(false);
   const [notification, setNotification] = useState(false);
 
-  // Mascara o telefone com asteriscos
-  const maskedPhone = phoneNumber.replace(/(\d{2})(\d{2})(\d{4})(\d{4})/, '+$1 $2 ****-****');
+  // Mascara o telefone mostrando apenas os dígitos do meio
+  const maskedPhone = phoneNumber.replace(/(\+\d{2}\s)(\d{2})(\s\d{4}-)(\d{4})/, '$1**$3****');
 
   // Notificações periódicas de novas mensagens
   useEffect(() => {
@@ -246,289 +246,159 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
         <Card className="bg-white rounded-lg shadow-xl overflow-hidden min-h-[70vh] md:min-h-[600px]">
           
           {/* WhatsApp Header */}
-          <div className="bg-[#075e54] text-white p-3 md:p-4">
+          <div className="bg-[#00a884] text-white p-3 md:p-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3 md:gap-4">
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <span className="text-base md:text-lg font-bold">W</span>
-                </div>
-                <h1 className="text-lg md:text-xl font-medium">WhatsApp</h1>
+              <h1 className="text-lg md:text-xl font-semibold">WhatsApp</h1>
+              <div className="flex items-center gap-4 md:gap-6">
+                <Camera 
+                  className="w-5 h-5 md:w-6 md:h-6 cursor-pointer hover:opacity-70" 
+                  onClick={() => toast("Câmera disponível após pagamento")} 
+                />
+                <MoreVertical 
+                  className="w-5 h-5 md:w-6 md:h-6 cursor-pointer hover:opacity-70" 
+                  onClick={() => toast("Menu disponível após pagamento")} 
+                />
               </div>
-              <div className="flex items-center gap-3 md:gap-4">
-                <Search className="w-4 h-4 md:w-5 md:h-5 cursor-pointer hover:opacity-70" onClick={() => toast("Função disponível após pagamento")} />
-                <MoreVertical className="w-4 h-4 md:w-5 md:h-5 cursor-pointer hover:opacity-70" onClick={() => toast("Função disponível após pagamento")} />
+            </div>
+            
+            {/* Search Bar */}
+            <div className="mt-3 relative">
+              <div 
+                className="bg-white/20 rounded-full px-4 py-2 flex items-center gap-3 cursor-pointer"
+                onClick={() => toast("Pesquisa disponível após pagamento")}
+              >
+                <Search className="w-4 h-4 text-white/70" />
+                <span className="text-white/70 text-sm">Pergunte à Meta AI ou pesquise</span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row h-[60vh] md:h-[600px]">
-            {/* Sidebar */}
-            <div className={`${selectedChat ? 'hidden md:block' : 'block'} md:w-1/3 w-full border-r border-gray-200 bg-white`}>
-              
-              {/* Tabs */}
-              <div className="flex border-b border-gray-200">
-                <button
-                  onClick={() => {
-                    setActiveTab('conversas');
-                    toast("Conversas carregadas");
-                  }}
-                  className={`flex-1 py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${
-                    activeTab === 'conversas' 
-                      ? 'text-[#075e54] border-b-2 border-[#075e54]' 
-                      : 'text-gray-600'
-                  }`}
-                >
-                  CONVERSAS
-                </button>
-                <button
-                  onClick={() => {
-                    setActiveTab('ligacoes');
-                    toast("Ligações disponíveis após pagamento");
-                  }}
-                  className={`flex-1 py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${
-                    activeTab === 'ligacoes' 
-                      ? 'text-[#075e54] border-b-2 border-[#075e54]' 
-                      : 'text-gray-600'
-                  }`}
-                >
-                  LIGAÇÕES
-                </button>
-                <button
-                  onClick={() => {
-                    setActiveTab('contatos');
-                    toast("Contatos disponíveis após pagamento");
-                  }}
-                  className={`flex-1 py-2 md:py-3 px-2 md:px-4 text-xs md:text-sm font-medium ${
-                    activeTab === 'contatos' 
-                      ? 'text-[#075e54] border-b-2 border-[#075e54]' 
-                      : 'text-gray-600'
-                  }`}
-                >
-                  CONTATOS
-                </button>
-              </div>
+          {/* Filter Tabs */}
+          <div className="bg-white border-b border-gray-200 px-3 py-2">
+            <div className="flex gap-2">
+              <button 
+                className="px-4 py-1 bg-[#e7f3e7] text-[#00a884] rounded-full text-sm font-medium"
+                onClick={() => toast("Todas as conversas carregadas")}
+              >
+                Todas
+              </button>
+              <button 
+                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                onClick={() => toast("Não lidas disponível após pagamento")}
+              >
+                Não lidas 
+                <span className="ml-1 bg-[#00a884] text-white text-xs px-1 rounded-full">23</span>
+              </button>
+              <button 
+                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                onClick={() => toast("Favoritos disponível após pagamento")}
+              >
+                Favoritos
+              </button>
+              <button 
+                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                onClick={() => toast("Grupos disponível após pagamento")}
+              >
+                Grupos 
+                <span className="ml-1 bg-gray-500 text-white text-xs px-1 rounded-full">4</span>
+              </button>
+            </div>
+          </div>
 
-              {/* Personal/Groups sub-tabs */}
-              <div className="flex border-b border-gray-200 bg-gray-50">
-                <button 
-                  onClick={() => toast("Conversas pessoais carregadas")}
-                  className="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-[#075e54] bg-white border-b-2 border-[#075e54]"
+          <div className="flex flex-col h-[50vh] md:h-[500px]">
+            {/* Chat List */}
+            <div className="flex-1 overflow-y-auto bg-white">
+              {contacts.map((contact) => (
+                <div 
+                  key={contact.id}
+                  onClick={() => {
+                    setSelectedChat(contact.id);
+                    toast("Conversa disponível após pagamento");
+                  }}
+                  className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
                 >
-                  PESSOAL
-                </button>
-                <button 
-                  onClick={() => toast("Grupos disponíveis após pagamento")}
-                  className="px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-gray-600"
-                >
-                  GRUPOS
-                </button>
-              </div>
-
-              {/* Chat List */}
-              <div className="overflow-y-auto h-full">
-                {contacts.map((contact) => (
-                  <div 
-                    key={contact.id}
-                    onClick={() => setSelectedChat(contact.id)}
-                    className={`flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 ${
-                      selectedChat === contact.id ? 'bg-[#e3f2fd]' : ''
-                    }`}
-                  >
-                    <div className="relative">
-                      <img 
-                        src={contact.avatar} 
-                        alt={contact.name}
-                        className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover blur-sm"
-                      />
-                      <div className="absolute inset-0 bg-black/20 rounded-full"></div>
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-gray-400 rounded-full border-2 border-white"></div>
+                  <div className="relative">
+                    <img 
+                      src={contact.avatar} 
+                      alt={contact.name}
+                      className="w-12 h-12 rounded-full object-cover blur-sm"
+                    />
+                    <div className="absolute inset-0 bg-black/20 rounded-full"></div>
+                  </div>
+                  
+                  <div className="ml-3 flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-medium text-gray-900 truncate blur-[1px]">
+                        {contact.name.replace('Bloqueado 🔒', '********')}
+                      </h3>
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-gray-500">{contact.time}</span>
+                      </div>
                     </div>
                     
-                    <div className="ml-2 md:ml-3 flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-xs md:text-sm font-medium text-gray-900 truncate">
-                          {contact.name}
-                        </h3>
-                        <div className="flex items-center gap-1">
-                          <StatusIcon status={contact.status} />
-                          <span className="text-xs text-gray-500">{contact.time}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between mt-1">
-                        <div className="flex items-center gap-1 md:gap-2">
-                          {contact.hasAlert && (
-                            <AlertTriangle className="w-3 h-3 text-red-500 flex-shrink-0" />
-                          )}
-                          <p className="text-xs md:text-sm text-gray-600 truncate blur-[1px]">
-                            {contact.lastMessage}
-                          </p>
-                        </div>
-                        {contact.messageCount > 0 && (
-                          <Badge className="bg-[#25d366] text-white text-xs min-w-[18px] md:min-w-[20px] h-4 md:h-5">
-                            {contact.messageCount}
-                          </Badge>
+                    <div className="flex items-center justify-between mt-1">
+                      <div className="flex items-center gap-2">
+                        {contact.hasAlert && (
+                          <AlertTriangle className="w-3 h-3 text-red-500 flex-shrink-0" />
                         )}
+                        <p className="text-sm text-gray-600 truncate blur-[2px]">
+                          {contact.lastMessage}
+                        </p>
                       </div>
-                      
-                      {contact.hasAlert && contact.alertText && (
-                        <div className="flex items-center gap-1 mt-1">
-                          <img 
-                            src="https://global24hub.com/espiao/concluido/images/alerta.gif" 
-                            alt="Alert" 
-                            className="w-3 h-3 animate-pulse"
-                          />
-                          <p className="text-xs text-red-600 blur-[0.5px]">{contact.alertText}</p>
-                        </div>
+                      {contact.messageCount > 0 && (
+                        <Badge className="bg-[#00a884] text-white text-xs min-w-[20px] h-5 rounded-full">
+                          {contact.messageCount}
+                        </Badge>
                       )}
                     </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Chat Area */}
-            <div className={`${selectedChat ? 'flex' : 'hidden md:flex'} flex-1 flex-col`}>
-              {selectedChat ? (
-                <>
-                  {/* Chat Header */}
-                  <div className="bg-[#f0f0f0] border-b border-gray-200 p-3 md:p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 md:gap-3">
-                        <ArrowLeft 
-                          className="w-5 h-5 text-gray-600 cursor-pointer md:hidden" 
-                          onClick={() => setSelectedChat(null)}
-                        />
-                        <img 
-                          src={contacts.find(c => c.id === selectedChat)?.avatar} 
-                          alt="Contact"
-                          className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover blur-sm"
-                        />
-                        <div className="relative">
-                          <div className="absolute inset-0 bg-black/20 rounded-full"></div>
-                        </div>
-                        <div>
-                          <h3 className="font-medium text-gray-900 text-sm md:text-base">
-                            {contacts.find(c => c.id === selectedChat)?.name}
-                          </h3>
-                          <p className="text-xs md:text-sm text-gray-500">Última atualização</p>
-                        </div>
+                    
+                    {contact.hasAlert && contact.alertText && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="text-xs text-red-600 blur-[1px]">{contact.alertText}</span>
                       </div>
-                      <div className="flex items-center gap-2 md:gap-4">
-                        <Video 
-                          className="w-4 h-4 md:w-5 md:h-5 text-gray-600 cursor-pointer hover:opacity-70" 
-                          onClick={() => toast("Videochamada disponível após pagamento")}
-                        />
-                        <Phone 
-                          className="w-4 h-4 md:w-5 md:h-5 text-gray-600 cursor-pointer hover:opacity-70" 
-                          onClick={() => toast("Chamada disponível após pagamento")}
-                        />
-                        <MoreVertical 
-                          className="w-4 h-4 md:w-5 md:h-5 text-gray-600 cursor-pointer hover:opacity-70" 
-                          onClick={() => toast("Opções disponíveis após pagamento")}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Messages Area */}
-                  <div className="flex-1 bg-[#ece5dd] p-2 md:p-4 overflow-y-auto">
-                    <div className="space-y-3 md:space-y-4">
-                      {chatMessages.map((message) => (
-                        <div 
-                          key={message.id}
-                          className={`flex ${message.isSent ? 'justify-end' : 'justify-start'}`}
-                        >
-                          <div 
-                            className={`max-w-xs md:max-w-md px-3 md:px-4 py-2 rounded-lg relative ${
-                              message.isSent 
-                                ? 'bg-[#dcf8c6] text-gray-900' 
-                                : 'bg-white text-gray-900'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <Lock className="w-3 h-3 md:w-4 md:h-4 text-gray-500" />
-                              <span className="text-xs md:text-sm font-medium blur-[1px]">{message.text}</span>
-                            </div>
-                            <div className="text-xs text-gray-500 text-right flex items-center justify-end gap-1">
-                              <span>{message.time}</span>
-                              {message.isSent && <StatusIcon status={message.status} />}
-                            </div>
-                            
-                            <div className="mt-2 p-2 bg-red-50 rounded border-l-4 border-red-500 animate-pulse">
-                              <p className="text-xs text-red-700 font-medium">
-                                ⚠️ Conteúdo suspeito detectado
-                              </p>
-                              <Button
-                                size="sm"
-                                onClick={() => setShowPurchasePopup(true)}
-                                className="mt-1 h-5 md:h-6 text-xs bg-red-500 hover:bg-red-600"
-                              >
-                                Desbloquear agora
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Message Input */}
-                  <div className="bg-[#f0f0f0] border-t border-gray-200 p-2 md:p-4">
-                    <div className="flex items-center gap-2 md:gap-3">
-                      <Smile 
-                        className="w-5 h-5 md:w-6 md:h-6 text-gray-500 cursor-pointer hover:opacity-70" 
-                        onClick={() => toast("Emojis disponíveis após pagamento")}
-                      />
-                      <Paperclip 
-                        className="w-5 h-5 md:w-6 md:h-6 text-gray-500 cursor-pointer hover:opacity-70" 
-                        onClick={() => toast("Anexos disponíveis após pagamento")}
-                      />
-                      <div className="flex-1 bg-white rounded-full px-3 md:px-4 py-2 flex items-center gap-2">
-                        <input 
-                          type="text" 
-                          placeholder="Escreva sua mensagem"
-                          className="flex-1 outline-none text-xs md:text-sm"
-                          disabled
-                          onClick={() => toast("Digite disponível após pagamento")}
-                        />
-                        <Camera 
-                          className="w-4 h-4 md:w-5 md:h-5 text-gray-500 cursor-pointer hover:opacity-70" 
-                          onClick={() => toast("Câmera disponível após pagamento")}
-                        />
-                        <Mic 
-                          className="w-4 h-4 md:w-5 md:h-5 text-gray-500 cursor-pointer hover:opacity-70" 
-                          onClick={() => toast("Microfone disponível após pagamento")}
-                        />
-                      </div>
-                      <Send 
-                        className="w-5 h-5 md:w-6 md:h-6 text-[#075e54] cursor-pointer hover:opacity-70" 
-                        onClick={() => toast("Envio disponível após pagamento")}
-                      />
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="flex-1 flex items-center justify-center bg-[#f0f0f0] p-4">
-                  <div className="text-center max-w-sm">
-                    <div className="w-24 h-24 md:w-32 md:h-32 bg-gray-200 rounded-full flex items-center justify-center mb-4 mx-auto">
-                      <Lock className="w-12 h-12 md:w-16 md:h-16 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-2">
-                      Conteúdo Bloqueado
-                    </h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-4">
-                      Selecione uma conversa para ver o conteúdo detectado
-                    </p>
-                    <Button 
-                      onClick={handlePurchase}
-                      className="bg-[#25d366] hover:bg-[#20c55a] text-white text-sm md:text-base"
-                    >
-                      Liberar Acesso Completo - R$ 67,00
-                    </Button>
+                    )}
                   </div>
                 </div>
-              )}
+              ))}
+            </div>
+
+            {/* Bottom Navigation */}
+            <div className="bg-white border-t border-gray-200 flex">
+              <button 
+                className="flex-1 flex flex-col items-center py-2 text-[#00a884]"
+                onClick={() => toast("Conversas carregadas")}
+              >
+                <MessageCircle className="w-5 h-5 mb-1" />
+                <span className="text-xs font-medium">Conversas</span>
+              </button>
+              
+              <button 
+                className="flex-1 flex flex-col items-center py-2 text-gray-500 relative"
+                onClick={() => toast("Atualizações disponível após pagamento")}
+              >
+                <div className="relative">
+                  <div className="w-5 h-5 bg-gray-400 rounded-full mb-1"></div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00a884] rounded-full"></div>
+                </div>
+                <span className="text-xs">Atualizações</span>
+              </button>
+              
+              <button 
+                className="flex-1 flex flex-col items-center py-2 text-gray-500"
+                onClick={() => toast("Comunidades disponível após pagamento")}
+              >
+                <div className="w-5 h-5 bg-gray-400 rounded-full mb-1"></div>
+                <span className="text-xs">Comunidades</span>
+              </button>
+              
+              <button 
+                className="flex-1 flex flex-col items-center py-2 text-gray-500 relative"
+                onClick={() => toast("Ligações disponível após pagamento")}
+              >
+                <Phone className="w-5 h-5 mb-1" />
+                <div className="absolute top-1 right-4 w-2 h-2 bg-red-500 rounded-full"></div>
+                <span className="text-xs">Ligações</span>
+              </button>
             </div>
           </div>
         </Card>
