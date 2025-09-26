@@ -20,7 +20,9 @@ import {
   Send,
   ArrowLeft,
   Bell,
-  MessageCircle
+  MessageCircle,
+  Users,
+  Circle
 } from "lucide-react";
 
 interface WhatsAppPreviewProps {
@@ -49,13 +51,21 @@ interface ChatMessage {
 }
 
 const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
-  const [activeTab, setActiveTab] = useState<'conversas' | 'ligacoes' | 'contatos'>('conversas');
+  const [activeTab, setActiveTab] = useState<'conversas' | 'atualizacoes' | 'comunidades' | 'ligacoes'>('conversas');
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [showPurchasePopup, setShowPurchasePopup] = useState(false);
   const [notification, setNotification] = useState(false);
 
-  // Mascara o telefone mostrando apenas os dígitos do meio
-  const maskedPhone = phoneNumber.replace(/(\+\d{2}\s)(\d{2})(\s\d{4}-)(\d{4})/, '$1**$3****');
+  // Mascara o telefone mostrando apenas alguns dígitos do meio
+  const maskedPhone = (() => {
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    if (cleaned.length >= 11) {
+      const ddd = cleaned.slice(0, 2);
+      const middle = cleaned.slice(4, 7); // Mostra apenas 3 dígitos do meio
+      return `+55 (${ddd}) *${middle}-****`;
+    }
+    return `+55 (**) *${phoneNumber.slice(-3)}-****`;
+  })();
 
   // Notificações periódicas de novas mensagens
   useEffect(() => {
@@ -164,41 +174,6 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
     }
   ];
 
-  const chatMessages: ChatMessage[] = [
-    {
-      id: '1',
-      text: 'Conteúdo Bloqueado 🔒',
-      time: '18:30',
-      isSent: false,
-      isBlocked: true,
-      status: 'read'
-    },
-    {
-      id: '2', 
-      text: 'Conteúdo Bloqueado 🔒',
-      time: '18:32',
-      isSent: true,
-      isBlocked: true,
-      status: 'read'
-    },
-    {
-      id: '3',
-      text: 'Conteúdo Bloqueado 🔒',
-      time: '18:35',
-      isSent: false,
-      isBlocked: true,
-      status: 'read'
-    },
-    {
-      id: '4',
-      text: 'Conteúdo Bloqueado 🔒',
-      time: '18:40',
-      isSent: true,
-      isBlocked: true,
-      status: 'read'
-    }
-  ];
-
   const handlePurchase = () => {
     window.open('https://global24hub.com/espiao/index.php?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=', '_blank');
   };
@@ -211,6 +186,132 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
         return <CheckCheck className="w-4 h-4 text-muted-foreground" />;
       case 'read':
         return <CheckCheck className="w-4 h-4 text-blue-500" />;
+    }
+  };
+
+  // Renderiza diferentes conteúdos baseado na aba ativa
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'atualizacoes':
+        return (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 blur-sm">
+              <Circle className="w-8 h-8 text-gray-400 fill-current" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 blur-[1px]">Status protegidos</h3>
+            <p className="text-gray-500 text-sm mb-6 blur-[1px]">Conteúdo bloqueado até liberação</p>
+            <Button 
+              onClick={handlePurchase}
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+            >
+              Liberar acesso
+            </Button>
+          </div>
+        );
+      
+      case 'comunidades':
+        return (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 blur-sm">
+              <Users className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 blur-[1px]">Comunidades protegidas</h3>
+            <p className="text-gray-500 text-sm mb-6 blur-[1px]">Grupos e conversas bloqueados</p>
+            <Button 
+              onClick={handlePurchase}
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+            >
+              Liberar acesso
+            </Button>
+          </div>
+        );
+      
+      case 'ligacoes':
+        return (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 blur-sm">
+              <Phone className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 blur-[1px]">Chamadas protegidas</h3>
+            <p className="text-gray-500 text-sm mb-6 blur-[1px]">Histórico de ligações bloqueado</p>
+            <div className="space-y-2 w-full mb-6">
+              {[1,2,3].map((i) => (
+                <div key={i} className="flex items-center p-3 bg-gray-50 rounded blur-[2px]">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
+                  <div className="flex-1">
+                    <p className="font-medium">Contato bloqueado</p>
+                    <p className="text-sm text-gray-500">Ontem, 14:30</p>
+                  </div>
+                  <Phone className="w-4 h-4 text-green-500" />
+                </div>
+              ))}
+            </div>
+            <Button 
+              onClick={handlePurchase}
+              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+            >
+              Liberar acesso
+            </Button>
+          </div>
+        );
+      
+      default: // conversas
+        return (
+          <div className="flex-1 overflow-y-auto bg-white">
+            {contacts.map((contact) => (
+              <div 
+                key={contact.id}
+                onClick={() => {
+                  setSelectedChat(contact.id);
+                  toast("Conversa disponível após pagamento");
+                }}
+                className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
+              >
+                <div className="relative">
+                  <img 
+                    src={contact.avatar} 
+                    alt={contact.name}
+                    className="w-12 h-12 rounded-full object-cover blur-sm"
+                  />
+                  <div className="absolute inset-0 bg-black/20 rounded-full"></div>
+                </div>
+                
+                <div className="ml-3 flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-medium text-gray-900 truncate blur-[1px]">
+                      {contact.name.replace('Bloqueado 🔒', '********')}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-gray-500">{contact.time}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-1">
+                    <div className="flex items-center gap-2">
+                      {contact.hasAlert && (
+                        <AlertTriangle className="w-3 h-3 text-red-500 flex-shrink-0" />
+                      )}
+                      <p className="text-sm text-gray-600 truncate blur-[2px]">
+                        {contact.lastMessage}
+                      </p>
+                    </div>
+                    {contact.messageCount > 0 && (
+                      <Badge className="bg-[#00a884] text-white text-xs min-w-[20px] h-5 rounded-full">
+                        {contact.messageCount}
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {contact.hasAlert && contact.alertText && (
+                    <div className="flex items-center gap-1 mt-1">
+                      <span className="text-xs text-red-600 blur-[1px]">{contact.alertText}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
     }
   };
 
@@ -306,94 +407,41 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
           </div>
 
           <div className="flex flex-col h-[50vh] md:h-[500px]">
-            {/* Chat List */}
-            <div className="flex-1 overflow-y-auto bg-white">
-              {contacts.map((contact) => (
-                <div 
-                  key={contact.id}
-                  onClick={() => {
-                    setSelectedChat(contact.id);
-                    toast("Conversa disponível após pagamento");
-                  }}
-                  className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
-                >
-                  <div className="relative">
-                    <img 
-                      src={contact.avatar} 
-                      alt={contact.name}
-                      className="w-12 h-12 rounded-full object-cover blur-sm"
-                    />
-                    <div className="absolute inset-0 bg-black/20 rounded-full"></div>
-                  </div>
-                  
-                  <div className="ml-3 flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium text-gray-900 truncate blur-[1px]">
-                        {contact.name.replace('Bloqueado 🔒', '********')}
-                      </h3>
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-gray-500">{contact.time}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between mt-1">
-                      <div className="flex items-center gap-2">
-                        {contact.hasAlert && (
-                          <AlertTriangle className="w-3 h-3 text-red-500 flex-shrink-0" />
-                        )}
-                        <p className="text-sm text-gray-600 truncate blur-[2px]">
-                          {contact.lastMessage}
-                        </p>
-                      </div>
-                      {contact.messageCount > 0 && (
-                        <Badge className="bg-[#00a884] text-white text-xs min-w-[20px] h-5 rounded-full">
-                          {contact.messageCount}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    {contact.hasAlert && contact.alertText && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-xs text-red-600 blur-[1px]">{contact.alertText}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Tab Content */}
+            {renderTabContent()}
 
             {/* Bottom Navigation */}
             <div className="bg-white border-t border-gray-200 flex">
               <button 
-                className="flex-1 flex flex-col items-center py-2 text-[#00a884]"
-                onClick={() => toast("Conversas carregadas")}
+                className={`flex-1 flex flex-col items-center py-2 ${activeTab === 'conversas' ? 'text-[#00a884]' : 'text-gray-500'}`}
+                onClick={() => setActiveTab('conversas')}
               >
                 <MessageCircle className="w-5 h-5 mb-1" />
                 <span className="text-xs font-medium">Conversas</span>
               </button>
               
               <button 
-                className="flex-1 flex flex-col items-center py-2 text-gray-500 relative"
-                onClick={() => toast("Atualizações disponível após pagamento")}
+                className={`flex-1 flex flex-col items-center py-2 relative ${activeTab === 'atualizacoes' ? 'text-[#00a884]' : 'text-gray-500'}`}
+                onClick={() => setActiveTab('atualizacoes')}
               >
                 <div className="relative">
-                  <div className="w-5 h-5 bg-gray-400 rounded-full mb-1"></div>
+                  <Circle className="w-5 h-5 mb-1 fill-current" />
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00a884] rounded-full"></div>
                 </div>
                 <span className="text-xs">Atualizações</span>
               </button>
               
               <button 
-                className="flex-1 flex flex-col items-center py-2 text-gray-500"
-                onClick={() => toast("Comunidades disponível após pagamento")}
+                className={`flex-1 flex flex-col items-center py-2 ${activeTab === 'comunidades' ? 'text-[#00a884]' : 'text-gray-500'}`}
+                onClick={() => setActiveTab('comunidades')}
               >
-                <div className="w-5 h-5 bg-gray-400 rounded-full mb-1"></div>
+                <Users className="w-5 h-5 mb-1" />
                 <span className="text-xs">Comunidades</span>
               </button>
               
               <button 
-                className="flex-1 flex flex-col items-center py-2 text-gray-500 relative"
-                onClick={() => toast("Ligações disponível após pagamento")}
+                className={`flex-1 flex flex-col items-center py-2 relative ${activeTab === 'ligacoes' ? 'text-[#00a884]' : 'text-gray-500'}`}
+                onClick={() => setActiveTab('ligacoes')}
               >
                 <Phone className="w-5 h-5 mb-1" />
                 <div className="absolute top-1 right-4 w-2 h-2 bg-red-500 rounded-full"></div>
