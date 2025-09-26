@@ -22,7 +22,9 @@ import {
   Bell,
   MessageCircle,
   Users,
-  Circle
+  Circle,
+  Plus,
+  X
 } from "lucide-react";
 
 interface WhatsAppPreviewProps {
@@ -55,6 +57,8 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [showPurchasePopup, setShowPurchasePopup] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
 
   // Mascara o telefone mostrando apenas alguns dígitos do meio
   const maskedPhone = (() => {
@@ -228,30 +232,42 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
       
       case 'ligacoes':
         return (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-white">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 blur-sm">
-              <Phone className="w-8 h-8 text-gray-400" />
+          <div className="flex-1 flex flex-col bg-white">
+            {/* Header com botão voltar */}
+            <div className="bg-[#00a884] text-white p-3 flex items-center gap-3">
+              <ArrowLeft 
+                className="w-5 h-5 cursor-pointer" 
+                onClick={() => setActiveTab('conversas')}
+              />
+              <h2 className="text-lg font-semibold">Ligações</h2>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 blur-[1px]">Chamadas protegidas</h3>
-            <p className="text-gray-500 text-sm mb-6 blur-[1px]">Histórico de ligações bloqueado</p>
-            <div className="space-y-2 w-full mb-6">
-              {[1,2,3].map((i) => (
-                <div key={i} className="flex items-center p-3 bg-gray-50 rounded blur-[2px]">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
-                  <div className="flex-1">
-                    <p className="font-medium">Contato bloqueado</p>
-                    <p className="text-sm text-gray-500">Ontem, 14:30</p>
+            
+            {/* Conteúdo das ligações */}
+            <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4 blur-sm">
+                <Phone className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2 blur-[1px]">Chamadas protegidas</h3>
+              <p className="text-gray-500 text-sm mb-6 blur-[1px]">Histórico de ligações bloqueado</p>
+              <div className="space-y-2 w-full mb-6">
+                {[1,2,3].map((i) => (
+                  <div key={i} className="flex items-center p-3 bg-gray-50 rounded blur-[2px]">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
+                    <div className="flex-1">
+                      <p className="font-medium">Contato bloqueado</p>
+                      <p className="text-sm text-gray-500">Ontem, 14:30</p>
+                    </div>
+                    <Phone className="w-4 h-4 text-green-500" />
                   </div>
-                  <Phone className="w-4 h-4 text-green-500" />
-                </div>
-              ))}
+                ))}
+              </div>
+              <Button 
+                onClick={handlePurchase}
+                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+              >
+                Liberar acesso
+              </Button>
             </div>
-            <Button 
-              onClick={handlePurchase}
-              className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
-            >
-              Liberar acesso
-            </Button>
           </div>
         );
       
@@ -364,13 +380,39 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
             
             {/* Search Bar */}
             <div className="mt-3 relative">
-              <div 
-                className="bg-white/20 rounded-full px-4 py-2 flex items-center gap-3 cursor-pointer"
-                onClick={() => toast("Pesquisa disponível após pagamento")}
-              >
-                <Search className="w-4 h-4 text-white/70" />
-                <span className="text-white/70 text-sm">Pergunte à Meta AI ou pesquise</span>
-              </div>
+              {showSearch ? (
+                <div className="bg-white rounded-full px-4 py-2 flex items-center gap-3">
+                  <ArrowLeft 
+                    className="w-4 h-4 text-gray-500 cursor-pointer" 
+                    onClick={() => {
+                      setShowSearch(false);
+                      setSearchQuery('');
+                    }}
+                  />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Pergunte à Meta AI ou pesquise"
+                    className="flex-1 bg-transparent text-gray-900 text-sm outline-none"
+                    autoFocus
+                  />
+                  {searchQuery && (
+                    <X 
+                      className="w-4 h-4 text-gray-500 cursor-pointer" 
+                      onClick={() => setSearchQuery('')}
+                    />
+                  )}
+                </div>
+              ) : (
+                <div 
+                  className="bg-white/20 rounded-full px-4 py-2 flex items-center gap-3 cursor-pointer"
+                  onClick={() => setShowSearch(true)}
+                >
+                  <Search className="w-4 h-4 text-white/70" />
+                  <span className="text-white/70 text-sm">Pergunte à Meta AI ou pesquise</span>
+                </div>
+              )}
             </div>
           </div>
 
@@ -379,26 +421,44 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
             <div className="flex gap-2">
               <button 
                 className="px-4 py-1 bg-[#e7f3e7] text-[#00a884] rounded-full text-sm font-medium"
-                onClick={() => toast("Todas as conversas carregadas")}
+                onClick={() => {
+                  setSearchQuery('');
+                  toast("Todas as conversas carregadas");
+                }}
               >
                 Todas
               </button>
               <button 
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                onClick={() => toast("Não lidas disponível após pagamento")}
+                className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
+                  searchQuery.includes('não lidas') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
+                }`}
+                onClick={() => {
+                  setSearchQuery('não lidas');
+                  toast("Filtrando conversas não lidas");
+                }}
               >
                 Não lidas 
                 <span className="ml-1 bg-[#00a884] text-white text-xs px-1 rounded-full">23</span>
               </button>
               <button 
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                onClick={() => toast("Favoritos disponível após pagamento")}
+                className={`px-3 py-1 rounded-full text-sm ${
+                  searchQuery.includes('favoritos') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
+                }`}
+                onClick={() => {
+                  setSearchQuery('favoritos');
+                  toast("Filtrando conversas favoritas");
+                }}
               >
                 Favoritos
               </button>
               <button 
-                className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                onClick={() => toast("Grupos disponível após pagamento")}
+                className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
+                  searchQuery.includes('grupos') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
+                }`}
+                onClick={() => {
+                  setSearchQuery('grupos');
+                  toast("Filtrando grupos");
+                }}
               >
                 Grupos 
                 <span className="ml-1 bg-gray-500 text-white text-xs px-1 rounded-full">4</span>
@@ -425,7 +485,9 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                 onClick={() => setActiveTab('atualizacoes')}
               >
                 <div className="relative">
-                  <Circle className="w-5 h-5 mb-1 fill-current" />
+                  <div className="w-5 h-5 mb-1 rounded-full border-2 border-current flex items-center justify-center">
+                    <Plus className="w-3 h-3" />
+                  </div>
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00a884] rounded-full"></div>
                 </div>
                 <span className="text-xs">Atualizações</span>
