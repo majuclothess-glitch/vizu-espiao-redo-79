@@ -42,7 +42,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       });
     }, 200);
 
-    // Simulate real-time counter updates - more frequent and realistic
     const counterInterval = setInterval(() => {
       setCurrentCounts(prev => {
         const newCounts = {
@@ -52,12 +51,11 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
           locations: Math.min(prev.locations + (Math.random() > 0.8 ? 1 : 0), finalCounts.locations)
         };
         
-        // Trigger flash effect for changed items
         const changedItems: string[] = [];
-        if (newCounts.messages > prev.messages) changedItems.push('messages');
-        if (newCounts.images > prev.images) changedItems.push('images');
-        if (newCounts.contacts > prev.contacts) changedItems.push('contacts');
-        if (newCounts.locations > prev.locations) changedItems.push('locations');
+        if (newCounts.messages > prev.messages) changedItems.push("messages");
+        if (newCounts.images > prev.images) changedItems.push("images");
+        if (newCounts.contacts > prev.contacts) changedItems.push("contacts");
+        if (newCounts.locations > prev.locations) changedItems.push("locations");
         
         if (changedItems.length > 0) {
           setFlashingItems(changedItems);
@@ -72,6 +70,18 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       clearInterval(processInterval);
       clearInterval(counterInterval);
     };
+  }, []);
+
+  // 👉 Adiciona o script do Vturb apenas uma vez
+  useEffect(() => {
+    if (!document.getElementById("vturb-script")) {
+      const script = document.createElement("script");
+      script.id = "vturb-script";
+      script.src =
+        "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+      script.async = true;
+      document.head.appendChild(script);
+    }
   }, []);
 
   return (
@@ -112,9 +122,13 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
 
           {/* Video Player */}
           <div className="relative bg-black rounded-lg overflow-hidden mb-6 aspect-video">
-            <div 
-              dangerouslySetInnerHTML={{
-                __html: `<vturb-smartplayer id="vid-68d49e092acbc9a1a749271b" style="display: block; margin: 0 auto; width: 100%; border-radius: 8px;"></vturb-smartplayer><script type="text/javascript">if (!window.smartplayerLoaded) { var s=document.createElement("script"); s.src="https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js"; s.async=true; document.head.appendChild(s); window.smartplayerLoaded = true; }</script>`
+            <vturb-smartplayer
+              id="vid-68d49e092acbc9a1a749271b"
+              style={{
+                display: "block",
+                margin: "0 auto",
+                width: "100%",
+                borderRadius: "8px",
               }}
             />
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs animate-fade-in">
@@ -141,11 +155,11 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
 
         {/* Live Counters */}
         <div className="grid grid-cols-2 gap-3">
-          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes('messages') ? 'ring-2 ring-destructive/50 bg-destructive/5' : ''}`}>
+          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("messages") ? "ring-2 ring-destructive/50 bg-destructive/5" : ""}`}>
             <div className="flex items-center justify-center mb-3">
               <MessageCircle className="w-8 h-8 text-destructive" />
             </div>
-            <div className={`text-2xl font-bold text-destructive mb-1 transition-all duration-300 ${flashingItems.includes('messages') ? 'scale-110' : ''}`}>
+            <div className={`text-2xl font-bold text-destructive mb-1 transition-all duration-300 ${flashingItems.includes("messages") ? "scale-110" : ""}`}>
               {currentCounts.messages}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
@@ -164,11 +178,11 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </Card>
 
-          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes('images') ? 'ring-2 ring-destructive/50 bg-destructive/5' : ''}`}>
+          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("images") ? "ring-2 ring-destructive/50 bg-destructive/5" : ""}`}>
             <div className="flex items-center justify-center mb-3">
               <ImageIcon className="w-8 h-8 text-destructive" />
             </div>
-            <div className={`text-2xl font-bold text-destructive mb-1 transition-all duration-300 ${flashingItems.includes('images') ? 'scale-110' : ''}`}>
+            <div className={`text-2xl font-bold text-destructive mb-1 transition-all duration-300 ${flashingItems.includes("images") ? "scale-110" : ""}`}>
               {currentCounts.images}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
@@ -187,11 +201,11 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </Card>
 
-          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes('contacts') ? 'ring-2 ring-warning/50 bg-warning/5' : ''}`}>
+          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("contacts") ? "ring-2 ring-warning/50 bg-warning/5" : ""}`}>
             <div className="flex items-center justify-center mb-3">
               <Users className="w-8 h-8 text-warning" />
             </div>
-            <div className={`text-2xl font-bold text-warning mb-1 transition-all duration-300 ${flashingItems.includes('contacts') ? 'scale-110' : ''}`}>
+            <div className={`text-2xl font-bold text-warning mb-1 transition-all duration-300 ${flashingItems.includes("contacts") ? "scale-110" : ""}`}>
               {currentCounts.contacts}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
@@ -210,11 +224,11 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </Card>
 
-          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes('locations') ? 'ring-2 ring-warning/50 bg-warning/5' : ''}`}>
+          <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("locations") ? "ring-2 ring-warning/50 bg-warning/5" : ""}`}>
             <div className="flex items-center justify-center mb-3">
               <MapPin className="w-8 h-8 text-warning" />
             </div>
-            <div className={`text-2xl font-bold text-warning mb-1 transition-all duration-300 ${flashingItems.includes('locations') ? 'scale-110' : ''}`}>
+            <div className={`text-2xl font-bold text-warning mb-1 transition-all duration-300 ${flashingItems.includes("locations") ? "scale-110" : ""}`}>
               {currentCounts.locations}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
