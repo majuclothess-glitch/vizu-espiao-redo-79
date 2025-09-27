@@ -72,15 +72,15 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
   }, []);
 
-  // 👉 Adiciona o script do Vturb apenas uma vez
+  // 👉 Adiciona o script do Vturb dentro do container do player
   useEffect(() => {
-    if (!document.getElementById("vturb-script")) {
+    const container = document.getElementById("vid-68d49e092acbc9a1a749271b");
+    if (container && !document.querySelector(`#vid-68d49e092acbc9a1a749271b script`)) {
       const script = document.createElement("script");
-      script.id = "vturb-script";
       script.src =
         "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
       script.async = true;
-      document.head.appendChild(script);
+      container.appendChild(script);
     }
   }, []);
 
@@ -136,7 +136,7 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             </div>
           </div>
 
-          {/* Phone Number Display - Below Video */}
+          {/* Phone Number Display */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-primary/10 to-primary/5 rounded-md border border-primary/20 mb-4">
             <div className="flex items-center justify-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-full flex items-center justify-center shadow-sm">
@@ -168,14 +168,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             <div className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">
               Conteúdo sexual detectado
             </div>
-            {currentCounts.messages > 0 && (
-              <div className="w-full bg-destructive/20 rounded-full h-1 mt-2 overflow-hidden">
-                <div 
-                  className="bg-destructive h-1 rounded-full transition-all duration-500 ease-out max-w-full" 
-                  style={{ width: `${Math.min((currentCounts.messages / finalCounts.messages) * 100, 100)}%` }}
-                />
-              </div>
-            )}
           </Card>
 
           <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("images") ? "ring-2 ring-destructive/50 bg-destructive/5" : ""}`}>
@@ -191,14 +183,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             <div className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">
               Nudes identificados
             </div>
-            {currentCounts.images > 0 && (
-              <div className="w-full bg-destructive/20 rounded-full h-1 mt-2 overflow-hidden">
-                <div 
-                  className="bg-destructive h-1 rounded-full transition-all duration-500 ease-out max-w-full" 
-                  style={{ width: `${Math.min((currentCounts.images / finalCounts.images) * 100, 100)}%` }}
-                />
-              </div>
-            )}
           </Card>
 
           <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("contacts") ? "ring-2 ring-warning/50 bg-warning/5" : ""}`}>
@@ -211,17 +195,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             <div className="text-sm text-muted-foreground font-medium">
               Contatos ocultos
             </div>
-            <div className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">
-              Nomes falsos detectados
-            </div>
-            {currentCounts.contacts > 0 && (
-              <div className="w-full bg-warning/20 rounded-full h-1 mt-2 overflow-hidden">
-                <div 
-                  className="bg-warning h-1 rounded-full transition-all duration-500 ease-out max-w-full" 
-                  style={{ width: `${Math.min((currentCounts.contacts / finalCounts.contacts) * 100, 100)}%` }}
-                />
-              </div>
-            )}
           </Card>
 
           <Card className={`glass-card p-4 text-center animate-fade-in transition-all duration-300 ${flashingItems.includes("locations") ? "ring-2 ring-warning/50 bg-warning/5" : ""}`}>
@@ -234,17 +207,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             <div className="text-sm text-muted-foreground font-medium">
               Locais suspeitos
             </div>
-            <div className="text-xs text-muted-foreground/60 mt-2 leading-relaxed">
-              Motéis e encontros
-            </div>
-            {currentCounts.locations > 0 && (
-              <div className="w-full bg-warning/20 rounded-full h-1 mt-2 overflow-hidden">
-                <div 
-                  className="bg-warning h-1 rounded-full transition-all duration-500 ease-out max-w-full" 
-                  style={{ width: `${Math.min((currentCounts.locations / finalCounts.locations) * 100, 100)}%` }}
-                />
-              </div>
-            )}
           </Card>
         </div>
       </div>
