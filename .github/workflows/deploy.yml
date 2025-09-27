@@ -27,6 +27,10 @@ jobs:
       - name: Build Vite project
         run: npm run build
 
+      # 👇 Adiciona essa etapa para corrigir rotas do React Router no GitHub Pages
+      - name: Copy index.html to 404.html
+        run: cp ./dist/index.html ./dist/404.html
+
       - name: Upload dist folder
         uses: actions/upload-pages-artifact@v3
         with:
