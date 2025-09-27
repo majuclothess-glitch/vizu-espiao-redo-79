@@ -22,14 +22,16 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Vite project
         run: npm run build
 
+      # Garantir que o SPA funcione nas rotas (react-router-dom)
       - name: Criar 404.html para SPA
         run: cp ./dist/index.html ./dist/404.html
 
+      # Garantir que o domínio customizado seja preservado
       - name: Adicionar CNAME
         run: echo "spywhats-oficial.online" > ./dist/CNAME
 
