@@ -65,17 +65,36 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null;
   }
 
+  // Valida configuração do chart para prevenir XSS
+  const isConfigSafe = colorConfig.every(([key, itemConfig]) => {
+    // Verifica se as cores são seguras
+    if (itemConfig.color && typeof itemConfig.color === 'string') {
+      return /^#[0-9A-Fa-f]{3,6}$|^hsl\([0-9, %]+\)$|^rgb\([0-9, ]+\)$/.test(itemConfig.color);
+    }
+    if (itemConfig.theme) {
+      return Object.values(itemConfig.theme).every(color => 
+        typeof color === 'string' && /^#[0-9A-Fa-f]{3,6}$|^hsl\([0-9, %]+\)$|^rgb\([0-9, ]+\)$/.test(color)
+      );
+    }
+    return true;
+  });
+
+  if (!isConfigSafe) {
+    console.error('Unsafe chart configuration detected');
+    return null;
+  }
+
   return (
     <style
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(
             ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart=${CSS.escape(id)}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    return color ? `  --color-${key}: ${color};` : null;
+    return color ? `  --color-${CSS.escape(key)}: ${color};` : null;
   })
   .join("\n")}
 }

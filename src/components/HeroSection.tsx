@@ -9,6 +9,7 @@ import LoadingSteps from "@/components/LoadingSteps";
 import VSLSection from "@/components/VSLSection";
 import InvestigationResults from "@/components/InvestigationResults";
 import { validatePhone, formatPhoneForDisplay } from "@/lib/phoneValidation";
+import { globalRateLimiter, sanitizeHtml } from "@/lib/security";
 
 const HeroSection = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -65,6 +66,17 @@ const HeroSection = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Rate limiting check
+    const clientId = 'investigation_' + Date.now().toString(36);
+    if (!globalRateLimiter.isAllowed(clientId)) {
+      toast({
+        title: "Muitas tentativas",
+        description: "Aguarde um momento antes de tentar novamente",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (!phoneNumber.trim()) {
       toast({
         title: "Erro",
@@ -74,8 +86,11 @@ const HeroSection = () => {
       return;
     }
 
+    // Sanitize input before validation
+    const sanitizedPhone = sanitizeHtml(phoneNumber.trim());
+    
     // Validate phone number
-    const validation = validatePhone(phoneNumber);
+    const validation = validatePhone(sanitizedPhone);
     
     if (!validation.success) {
       toast({
@@ -186,10 +201,15 @@ const HeroSection = () => {
                     type="tel"
                     placeholder="(11) 90000-0000"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={(e) => {
+                      const sanitizedValue = sanitizeHtml(e.target.value);
+                      setPhoneNumber(sanitizedValue);
+                    }}
                     className="h-12 md:h-14 text-base md:text-lg glass-card border-primary/30 focus:border-primary bg-background/50"
                     required
                     maxLength={20}
+                    autoComplete="tel"
+                    inputMode="tel"
                   />
                   <div className="text-xs text-muted-foreground mt-1 flex items-center gap-2">
                     <AlertTriangle className="w-3 h-3" />

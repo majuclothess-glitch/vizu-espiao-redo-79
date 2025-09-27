@@ -26,6 +26,7 @@ import {
   Plus,
   X
 } from "lucide-react";
+import { validateSearchQuery, validateUrl, sanitizeHtml } from "@/lib/security";
 
 interface WhatsAppPreviewProps {
   phoneNumber: string;
@@ -179,7 +180,20 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
   ];
 
   const handlePurchase = () => {
-    window.open('https://go.perfectpay.com.br/PPU38CQ19LG', '_blank');
+    const targetUrl = 'https://go.perfectpay.com.br/PPU38CQ19LG';
+    
+    // Valida URL antes de abrir
+    const urlValidation = validateUrl(targetUrl);
+    if (!urlValidation.success) {
+      console.error('URL validation failed:', urlValidation.error);
+      toast("Erro de segurança. Tente novamente.", {
+        description: "URL inválida detectada"
+      });
+      return;
+    }
+    
+    // Abre URL validada com configurações de segurança
+    window.open(urlValidation.data, '_blank', 'noopener,noreferrer');
   };
 
   const StatusIcon = ({ status }: { status: 'sent' | 'delivered' | 'read' }) => {
@@ -386,21 +400,39 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                     className="w-4 h-4 text-gray-500 cursor-pointer" 
                     onClick={() => {
                       setShowSearch(false);
-                      setSearchQuery('');
+                      const validation = validateSearchQuery('');
+                      if (validation.success) {
+                        setSearchQuery('');
+                      }
                     }}
                   />
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Pergunte à Meta AI ou pesquise"
+                    onChange={(e) => {
+                      const rawValue = e.target.value;
+                      const validation = validateSearchQuery(rawValue);
+                      if (validation.success) {
+                        setSearchQuery(validation.data);
+                      } else {
+                        // Mantém o valor anterior se a validação falhar
+                        console.warn('Invalid search query:', validation.error);
+                      }
+                    }}
+                    placeholder="Perguise à Meta AI ou pesquise"
                     className="flex-1 bg-transparent text-gray-900 text-sm outline-none"
                     autoFocus
+                    maxLength={100}
                   />
                   {searchQuery && (
                     <X 
                       className="w-4 h-4 text-gray-500 cursor-pointer" 
-                      onClick={() => setSearchQuery('')}
+                      onClick={() => {
+                        const validation = validateSearchQuery('');
+                        if (validation.success) {
+                          setSearchQuery('');
+                        }
+                      }}
                     />
                   )}
                 </div>
@@ -422,8 +454,11 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
               <button 
                 className="px-4 py-1 bg-[#e7f3e7] text-[#00a884] rounded-full text-sm font-medium"
                 onClick={() => {
-                  setSearchQuery('');
-                  toast("Todas as conversas carregadas");
+                  const validation = validateSearchQuery('');
+                  if (validation.success) {
+                    setSearchQuery('');
+                    toast("Todas as conversas carregadas");
+                  }
                 }}
               >
                 Todas
@@ -433,8 +468,11 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                   searchQuery.includes('não lidas') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
                 }`}
                 onClick={() => {
-                  setSearchQuery('não lidas');
-                  toast("Filtrando conversas não lidas");
+                  const validation = validateSearchQuery('não lidas');
+                  if (validation.success) {
+                    setSearchQuery(validation.data);
+                    toast("Filtrando conversas não lidas");
+                  }
                 }}
               >
                 Não lidas 
@@ -445,8 +483,11 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                   searchQuery.includes('favoritos') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
                 }`}
                 onClick={() => {
-                  setSearchQuery('favoritos');
-                  toast("Filtrando conversas favoritas");
+                  const validation = validateSearchQuery('favoritos');
+                  if (validation.success) {
+                    setSearchQuery(validation.data);
+                    toast("Filtrando conversas favoritas");
+                  }
                 }}
               >
                 Favoritos
@@ -456,8 +497,11 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                   searchQuery.includes('grupos') ? 'bg-[#e7f3e7] text-[#00a884]' : 'bg-gray-100 text-gray-700'
                 }`}
                 onClick={() => {
-                  setSearchQuery('grupos');
-                  toast("Filtrando grupos");
+                  const validation = validateSearchQuery('grupos');
+                  if (validation.success) {
+                    setSearchQuery(validation.data);
+                    toast("Filtrando grupos");
+                  }
                 }}
               >
                 Grupos 

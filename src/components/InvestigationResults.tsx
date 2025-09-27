@@ -15,6 +15,7 @@ import {
   Camera,
   Users
 } from "lucide-react";
+import { validateUrl } from "@/lib/security";
 
 interface InvestigationResultsProps {
   phoneNumber: string;
@@ -120,7 +121,17 @@ const InvestigationResults = ({ phoneNumber }: InvestigationResultsProps) => {
   }, []);
 
   const handleViewResults = () => {
-    window.open(`https://go.perfectpay.com.br/PPU38CQ19LG`, '_blank');
+    const targetUrl = 'https://go.perfectpay.com.br/PPU38CQ19LG';
+    
+    // Valida URL antes de abrir
+    const urlValidation = validateUrl(targetUrl);
+    if (!urlValidation.success) {
+      console.error('URL validation failed:', urlValidation.error);
+      return;
+    }
+    
+    // Abre URL validada
+    window.open(urlValidation.data, '_blank', 'noopener,noreferrer');
   };
 
   return (

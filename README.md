@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
+# WhatsApp Investigator Pro - Sistema de Monitoramento Seguro
 
-## Project info
+Sistema profissional de monitoramento WhatsApp com implementações avançadas de segurança para prevenir ataques de injeção e garantir execução segura.
 
-**URL**: https://lovable.dev/projects/3542ca23-0044-420c-9b3d-edaeb0a59abc
+## 🔒 Implementações de Segurança
 
-## How can I edit this code?
+### 1. Validação e Sanitização de Entradas
 
-There are several ways of editing your application.
+#### Biblioteca de Segurança (`src/lib/security.ts`)
+- **Validação rigorosa** com schemas Zod
+- **Sanitização de HTML** removendo scripts e eventos
+- **Validação de URLs** com whitelist de domínios
+- **Rate limiting** para prevenir spam
+- **Validação de CSS** para componentes dinâmicos
 
-**Use Lovable**
+### 2. Prevenção de XSS
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/3542ca23-0044-420c-9b3d-edaeb0a59abc) and start prompting.
+✅ Sanitização de `dangerouslySetInnerHTML`  
+✅ Uso de `CSS.escape()` para valores dinâmicos  
+✅ Validação de configurações de chart  
+✅ Remoção de scripts inline maliciosos  
 
-Changes made via Lovable will be committed automatically to this repo.
+### 3. Validação de URLs Seguras
 
-**Use your preferred IDE**
+✅ Whitelist de URLs permitidas  
+✅ Validação antes de `window.open()`  
+✅ Configurações `noopener,noreferrer`  
+✅ Bloqueio de `javascript:` URLs  
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 4. Proteções Implementadas
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **SecurityBoundary**: Captura erros de segurança
+- **Rate Limiting**: Previne spam (10 req/min, 3 investigações/hora)
+- **CSP Headers**: Content Security Policy configurado
+- **Input Validation**: Validação client e server-side
+- **URL Sanitization**: Parâmetros de URL seguros
 
-Follow these steps:
+## 🛡️ URLs e Domínios Permitidos
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- `https://go.perfectpay.com.br/PPU38CQ19LG`
+- `https://global24hub.com/*`
+- `https://i.postimg.cc/*`  
+- `https://cdn-icons-png.flaticon.com/*`
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## ⚡ Funcionalidades
 
-# Step 3: Install the necessary dependencies.
-npm i
+- Interface WhatsApp realista e responsiva
+- Sistema de investigação simulado com etapas
+- Validação de números brasileiros com DDD
+- Player de vídeo integrado e seguro
+- Notificações em tempo real
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## 🚀 Como Usar
 
-**Edit a file directly in GitHub**
+1. Insira um número de telefone brasileiro
+2. Aguarde o processo de "investigação"
+3. Visualize os resultados simulados
+4. Proceda com segurança para a próxima etapa
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🔧 Tecnologias
 
-**Use GitHub Codespaces**
+- **Frontend**: React + TypeScript + Vite
+- **UI**: Tailwind CSS + shadcn/ui
+- **Validação**: Zod schemas
+- **Segurança**: CSP + Rate Limiting + Input Sanitization
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🌐 Deploy
 
-## What technologies are used for this project?
+Deploy via Lovable: [Publicar Projeto](https://lovable.dev/projects/3542ca23-0044-420c-9b3d-edaeb0a59abc)
 
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/3542ca23-0044-420c-9b3d-edaeb0a59abc) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Todas as funcionalidades foram implementadas com foco na segurança e prevenção de vulnerabilidades.
