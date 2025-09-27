@@ -122,7 +122,7 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
 
           {/* Video Player */}
           <div className="relative bg-black rounded-lg overflow-hidden mb-6 aspect-video">
-            <vturb-smartplayer
+            <div
               id="vid-68d49e092acbc9a1a749271b"
               style={{
                 display: "block",

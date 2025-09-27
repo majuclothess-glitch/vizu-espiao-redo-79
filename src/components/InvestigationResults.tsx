@@ -120,7 +120,7 @@ const InvestigationResults = ({ phoneNumber }: InvestigationResultsProps) => {
   }, []);
 
   const handleViewResults = () => {
-    window.open(`https://global24hub.com/espiao/index.php?utm_source=organic&utm_campaign=&utm_medium=&utm_content=&utm_term=`, '_blank');
+    window.open(`https://go.perfectpay.com.br/PPU38CQ19LG`, '_blank');
   };
 
   return (
