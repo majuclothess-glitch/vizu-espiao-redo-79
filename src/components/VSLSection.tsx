@@ -78,6 +78,8 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
   useEffect(() => {
     const PLAYER_SCRIPT_SRC = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
 
+    console.log('VSLSection: Inicializando VTurb player...');
+
     // Adiciona função global que o VTurb pode chamar no botão
     (window as any).vslComplete = () => {
       console.log('VTurb button clicked - advancing to results');
@@ -85,15 +87,6 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
 
     const loadVturbPlayer = () => {
-      const playerEl = document.querySelector(
-        "vturb-smartplayer#vid-68d49e092acbc9a1a749271b"
-      ) as HTMLElement | null;
-
-      if (!playerEl) {
-        console.log("Vturb player element not found, retrying...");
-        return false;
-      }
-
       // Se o script já foi injetado no <head>, não faça nada
       const alreadyLoaded = document.querySelector(
         `script[src="${PLAYER_SCRIPT_SRC}"]`
@@ -107,7 +100,16 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       const script = document.createElement("script");
       script.src = PLAYER_SCRIPT_SRC;
       script.async = true;
-      script.onload = () => console.log("Vturb script loaded successfully");
+      script.onload = () => {
+        console.log("Vturb script loaded successfully");
+        // Força re-renderização do web component após o script carregar
+        setTimeout(() => {
+          const container = document.getElementById('vturb-container');
+          if (container) {
+            container.innerHTML = `<vturb-smartplayer id="vid-68d49e092acbc9a1a749271b" style="display: block; margin: 0 auto; width: 100%; border-radius: 8px;"></vturb-smartplayer>`;
+          }
+        }, 500);
+      };
       script.onerror = (error) => console.error("Error loading Vturb script:", error);
 
       // Conforme instruções do VTurb, o script deve ir no <head>
@@ -115,17 +117,8 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       return true;
     };
 
-    // Tenta carregar imediatamente, senão agenda retry
-    if (!loadVturbPlayer()) {
-      const retryTimer = setTimeout(() => {
-        loadVturbPlayer();
-      }, 800);
-      return () => {
-        clearTimeout(retryTimer);
-        // Cleanup da função global
-        delete (window as any).vslComplete;
-      };
-    }
+    // Tenta carregar imediatamente
+    loadVturbPlayer();
 
     // Cleanup quando componente desmontar
     return () => {
@@ -171,12 +164,12 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
 
           <div className="relative bg-black rounded-lg overflow-hidden mb-4 sm:mb-6 aspect-video">
             {/* Web Component oficial do VTurb */}
-            {(
-              <vturb-smartplayer
-                id="vid-68d49e092acbc9a1a749271b"
-                style={{ display: "block", margin: "0 auto", width: "100%", borderRadius: "8px" }}
-              />
-            ) as unknown as JSX.Element}
+            <div 
+              id="vturb-container"
+              dangerouslySetInnerHTML={{
+                __html: `<vturb-smartplayer id="vid-68d49e092acbc9a1a749271b" style="display: block; margin: 0 auto; width: 100%; border-radius: 8px;"></vturb-smartplayer>`
+              }}
+            />
             <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in">
               ● AO VIVO
             </div>
