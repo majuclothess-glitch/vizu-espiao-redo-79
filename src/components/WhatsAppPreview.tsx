@@ -369,7 +369,7 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
             onClick={handlePurchase}
             className="h-10 md:h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-sm md:text-lg shadow-lg animate-pulse"
           >
-            Liberar acesso completo por R$ 67,00
+            Liberar acesso completo por R$ 37,90
           </Button>
         </div>
 
@@ -574,7 +574,7 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
                     onClick={handlePurchase}
                     className="w-full h-10 md:h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold animate-pulse"
                   >
-                    Liberar por R$ 67,00
+                    Liberar por R$ 37,90
                   </Button>
                   <Button 
                     variant="outline"
