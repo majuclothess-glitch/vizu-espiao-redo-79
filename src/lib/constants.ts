@@ -4,7 +4,7 @@
 
 // URLs permitidas para redirecionamento
 export const ALLOWED_URLS = [
-  'https://go.perfectpay.com.br/PPU38CQ19LG'
+  'https://pay.cakto.com.br/efgr85x_587098'
 ] as const;
 
 // URLs permitidas para imagens

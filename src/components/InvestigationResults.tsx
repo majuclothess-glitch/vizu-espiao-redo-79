@@ -121,7 +121,7 @@ const InvestigationResults = ({ phoneNumber }: InvestigationResultsProps) => {
   }, []);
 
   const handleViewResults = () => {
-    const targetUrl = 'https://go.perfectpay.com.br/PPU38CQ19LG';
+    const targetUrl = 'https://pay.cakto.com.br/efgr85x_587098';
     
     // Valida URL antes de abrir
     const urlValidation = validateUrl(targetUrl);

@@ -26,7 +26,7 @@ export const urlSchema = z.string()
   .refine((url) => {
     // Lista de URLs permitidas (whitelist)
     const allowedDomains = [
-      'https://go.perfectpay.com.br',
+      'https://pay.cakto.com.br',
       'https://global24hub.com',
       'https://i.postimg.cc',
       'https://cdn-icons-png.flaticon.com'
