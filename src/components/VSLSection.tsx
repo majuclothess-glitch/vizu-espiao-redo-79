@@ -74,55 +74,42 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
   }, []);
 
-  // 👉 Injeta o player da Vturb (usando web component oficial) + callback global
+  // 👉 Injeta o player da Vturb (Player 2.0) + callback global
   useEffect(() => {
-    const PLAYER_SCRIPT_SRC = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+    const ACCOUNT_ID = "90332a23-8844-4f31-aebf-ce6d72891446";
+    const PLAYER_ID = "68d49e092acbc9a1a749271b";
 
-    console.log('VSLSection: Inicializando VTurb player...');
+    console.log('VSLSection: Inicializando VTurb Player 2.0...');
 
-    // Adiciona função global que o VTurb pode chamar no botão
+    // Callback que o botão do VTurb pode chamar
     (window as any).vslComplete = () => {
-      console.log('VTurb button clicked - advancing to results');
+      console.log('VTurb: botão clicado → avançar para resultados');
       onComplete();
     };
 
-    const loadVturbPlayer = () => {
-      // Se o script já foi injetado no <head>, não faça nada
-      const alreadyLoaded = document.querySelector(
-        `script[src="${PLAYER_SCRIPT_SRC}"]`
-      );
-      if (alreadyLoaded) {
-        console.log("Vturb script already present in head");
-        return true;
-      }
+    const container = document.getElementById('vturb-container');
+    if (!container) {
+      console.warn('VSLSection: #vturb-container não encontrado');
+      return () => { delete (window as any).vslComplete; };
+    }
 
-      console.log("Loading Vturb script in head...");
-      const script = document.createElement("script");
-      script.src = PLAYER_SCRIPT_SRC;
-      script.async = true;
-      script.onload = () => {
-        console.log("Vturb script loaded successfully");
-        // Força re-renderização do web component após o script carregar
-        setTimeout(() => {
-          const container = document.getElementById('vturb-container');
-          if (container) {
-            container.innerHTML = `<vturb-smartplayer id="vid-68d49e092acbc9a1a749271b" style="display: block; margin: 0 auto; width: 100%; border-radius: 8px;"></vturb-smartplayer>`;
-          }
-        }, 500);
-      };
-      script.onerror = (error) => console.error("Error loading Vturb script:", error);
+    // 1) Insere o web component
+    container.innerHTML = `<vturb-smartplayer id="vid-${PLAYER_ID}" style="display:block;margin:0 auto;width:100%;border-radius:8px;"></vturb-smartplayer>`;
 
-      // Conforme instruções do VTurb, o script deve ir no <head>
-      document.head.appendChild(script);
-      return true;
-    };
+    // 2) Anexa o script do player ao container (necessário para executar)
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = `https://scripts.converteai.net/${ACCOUNT_ID}/players/${PLAYER_ID}/player.js`;
+    script.async = true;
+    script.onload = () => console.log('Vturb player.js carregado com sucesso');
+    script.onerror = (e) => console.error('Erro ao carregar Vturb player.js', e);
+    container.appendChild(script);
 
-    // Tenta carregar imediatamente
-    loadVturbPlayer();
-
-    // Cleanup quando componente desmontar
+    // Cleanup
     return () => {
       delete (window as any).vslComplete;
+      const el = document.getElementById('vturb-container');
+      if (el) el.innerHTML = '';
     };
   }, [onComplete]);
 
@@ -163,13 +150,7 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
           </div>
 
           <div className="relative bg-black rounded-lg overflow-hidden mb-4 sm:mb-6 aspect-video">
-            {/* Web Component oficial do VTurb */}
-            <div 
-              id="vturb-container"
-              dangerouslySetInnerHTML={{
-                __html: `<vturb-smartplayer id="vid-68d49e092acbc9a1a749271b" style="display: block; margin: 0 auto; width: 100%; border-radius: 8px;"></vturb-smartplayer>`
-              }}
-            />
+            <div id="vturb-container" />
             <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in">
               ● AO VIVO
             </div>
