@@ -31,16 +31,13 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     locations: Math.floor(Math.random() * 6) + 2
   };
 
-  // Simula progresso do "rastreamento"
+  // Simula progresso do "rastreamento" sem avançar automaticamente
   useEffect(() => {
     const processInterval = setInterval(() => {
       setProcessingProgress(prev => {
         if (prev >= 100) {
           clearInterval(processInterval);
-          // Quando o progresso chega a 100%, aguarda 3 segundos e vai para os resultados
-          setTimeout(() => {
-            onComplete();
-          }, 3000);
+          // Remove o avanço automático - agora depende do botão do VTurb
           return 100;
         }
         return prev + 0.5;
@@ -77,9 +74,15 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
   }, []);
 
-  // 👉 Injeta o player da Vturb (usando web component oficial)
+  // 👉 Injeta o player da Vturb (usando web component oficial) + callback global
   useEffect(() => {
     const PLAYER_SCRIPT_SRC = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+
+    // Adiciona função global que o VTurb pode chamar no botão
+    (window as any).vslComplete = () => {
+      console.log('VTurb button clicked - advancing to results');
+      onComplete();
+    };
 
     const loadVturbPlayer = () => {
       const playerEl = document.querySelector(
@@ -117,9 +120,18 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       const retryTimer = setTimeout(() => {
         loadVturbPlayer();
       }, 800);
-      return () => clearTimeout(retryTimer);
+      return () => {
+        clearTimeout(retryTimer);
+        // Cleanup da função global
+        delete (window as any).vslComplete;
+      };
     }
-  }, []);
+
+    // Cleanup quando componente desmontar
+    return () => {
+      delete (window as any).vslComplete;
+    };
+  }, [onComplete]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80 p-2 sm:p-4">
