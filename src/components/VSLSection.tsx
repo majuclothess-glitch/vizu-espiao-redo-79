@@ -73,52 +73,46 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
   }, []);
 
-  // 👉 Injeta o player da Vturb dentro da div certa
+  // 👉 Injeta o player da Vturb (usando web component oficial)
   useEffect(() => {
+    const PLAYER_SCRIPT_SRC = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+
     const loadVturbPlayer = () => {
-      const playerDiv = document.getElementById("vid-68d49e092acbc9a1a749271b");
-      
-      if (!playerDiv) {
-        console.log("Player div not found, retrying...");
+      const playerEl = document.querySelector(
+        "vturb-smartplayer#vid-68d49e092acbc9a1a749271b"
+      ) as HTMLElement | null;
+
+      if (!playerEl) {
+        console.log("Vturb player element not found, retrying...");
         return false;
       }
 
-      // Remove script anterior se existir
-      const existingScript = document.getElementById("vturb-script");
-      if (existingScript) {
-        existingScript.remove();
+      // Se o script já foi injetado no <head>, não faça nada
+      const alreadyLoaded = document.querySelector(
+        `script[src="${PLAYER_SCRIPT_SRC}"]`
+      );
+      if (alreadyLoaded) {
+        console.log("Vturb script already present in head");
+        return true;
       }
 
-      // Limpa o container
-      playerDiv.innerHTML = "";
-
-      console.log("Loading Vturb player...");
-      
+      console.log("Loading Vturb script in head...");
       const script = document.createElement("script");
-      script.id = "vturb-script";
-      script.src = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+      script.src = PLAYER_SCRIPT_SRC;
       script.async = true;
-      
-      script.onload = () => {
-        console.log("Vturb script loaded successfully");
-      };
-      
-      script.onerror = (error) => {
-        console.error("Error loading Vturb script:", error);
-      };
+      script.onload = () => console.log("Vturb script loaded successfully");
+      script.onerror = (error) => console.error("Error loading Vturb script:", error);
 
-      // Adiciona o script dentro do container para que o player detecte o parent correto
-      playerDiv.appendChild(script);
+      // Conforme instruções do VTurb, o script deve ir no <head>
+      document.head.appendChild(script);
       return true;
     };
 
-    // Tenta carregar imediatamente
+    // Tenta carregar imediatamente, senão agenda retry
     if (!loadVturbPlayer()) {
-      // Se falhar, tenta novamente após um delay
       const retryTimer = setTimeout(() => {
         loadVturbPlayer();
-      }, 1000);
-
+      }, 800);
       return () => clearTimeout(retryTimer);
     }
   }, []);
@@ -159,17 +153,14 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </div>
 
-          {/* Video Player */}
           <div className="relative bg-black rounded-lg overflow-hidden mb-6 aspect-video">
-            <div
-              id="vid-68d49e092acbc9a1a749271b"
-              style={{
-                display: "block",
-                margin: "0 auto",
-                width: "100%",
-                borderRadius: "8px",
-              }}
-            />
+            {/* Web Component oficial do VTurb */}
+            {(
+              <vturb-smartplayer
+                id="vid-68d49e092acbc9a1a749271b"
+                style={{ display: "block", margin: "0 auto", width: "100%", borderRadius: "8px" }}
+              />
+            ) as unknown as JSX.Element}
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs animate-fade-in">
               ● AO VIVO
             </div>
