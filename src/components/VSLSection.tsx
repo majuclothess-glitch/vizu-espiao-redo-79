@@ -146,12 +146,31 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </div>
 
-          <div className="relative bg-black rounded-lg mb-4 sm:mb-6 aspect-video overflow-visible isolate">
+          {/* VERSÃO FUNCIONANDO - BACKUP:
+              <div className="relative bg-black rounded-lg mb-4 sm:mb-6 aspect-video overflow-visible isolate">
+                <vturb-smartplayer
+                  id="vid-68d49e092acbc9a1a749271b"
+                  style={{ display: "block", margin: "0 auto", width: "100%", height: "100%", borderRadius: "8px" }}
+                />
+                <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in pointer-events-none z-10">
+                  ● AO VIVO
+                </div>
+              </div>
+          */}
+          
+          {/* Container flexível que permite ao VTurb empurrar conteúdo para baixo */}
+          <div className="relative bg-black rounded-lg mb-4 sm:mb-6 overflow-visible isolate min-h-[200px]">
             {/* Web Component oficial do VTurb */}
             {(
               <vturb-smartplayer
                 id="vid-68d49e092acbc9a1a749271b"
-                style={{ display: "block", margin: "0 auto", width: "100%", height: "100%", borderRadius: "8px" }}
+                style={{ 
+                  display: "block", 
+                  margin: "0 auto", 
+                  width: "100%", 
+                  minHeight: "200px",
+                  borderRadius: "8px"
+                }}
               />
             ) as unknown as JSX.Element}
             <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in pointer-events-none z-10">
