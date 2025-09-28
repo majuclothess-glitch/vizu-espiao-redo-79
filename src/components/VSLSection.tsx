@@ -74,42 +74,39 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
     };
   }, []);
 
-  // 👉 Injeta o player da Vturb (Player 2.0) + callback global
+  // 👉 Injeta o player da Vturb (v4) + callback global
   useEffect(() => {
-    const ACCOUNT_ID = "90332a23-8844-4f31-aebf-ce6d72891446";
-    const PLAYER_ID = "68d49e092acbc9a1a749271b";
+    const PLAYER_SRC = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+    const WC_SRC = "https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js";
 
-    console.log('VSLSection: Inicializando VTurb Player 2.0...');
-
-    // Callback que o botão do VTurb pode chamar
+    // Função global para o botão nativo do VTurb
     (window as any).vslComplete = () => {
       console.log('VTurb: botão clicado → avançar para resultados');
       onComplete();
     };
 
-    const container = document.getElementById('vturb-container');
-    if (!container) {
-      console.warn('VSLSection: #vturb-container não encontrado');
-      return () => { delete (window as any).vslComplete; };
-    }
+    // Garante que os scripts estejam no head (forma mais compatível)
+    const ensureScript = (src: string) => {
+      let el = document.querySelector(`script[src="${src}"]`) as HTMLScriptElement | null;
+      if (!el) {
+        el = document.createElement('script');
+        el.src = src;
+        el.async = true;
+        document.head.appendChild(el);
+      }
+      return el;
+    };
 
-    // 1) Insere o web component
-    container.innerHTML = `<vturb-smartplayer id="vid-${PLAYER_ID}" style="display:block;margin:0 auto;width:100%;border-radius:8px;"></vturb-smartplayer>`;
+    const playerEl = ensureScript(PLAYER_SRC);
+    playerEl.onload = () => console.log('VTurb v4 player.js carregado');
+    playerEl.onerror = (e) => console.error('Erro ao carregar VTurb v4 player.js', e);
 
-    // 2) Anexa o script do player ao container (necessário para executar)
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = `https://scripts.converteai.net/${ACCOUNT_ID}/players/${PLAYER_ID}/player.js`;
-    script.async = true;
-    script.onload = () => console.log('Vturb player.js carregado com sucesso');
-    script.onerror = (e) => console.error('Erro ao carregar Vturb player.js', e);
-    container.appendChild(script);
+    const wcEl = ensureScript(WC_SRC);
+    wcEl.onload = () => console.log('VTurb smartplayer-wc v4 carregado');
+    wcEl.onerror = (e) => console.error('Erro ao carregar smartplayer-wc v4', e);
 
-    // Cleanup
     return () => {
       delete (window as any).vslComplete;
-      const el = document.getElementById('vturb-container');
-      if (el) el.innerHTML = '';
     };
   }, [onComplete]);
 
@@ -150,7 +147,13 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
           </div>
 
           <div className="relative bg-black rounded-lg overflow-hidden mb-4 sm:mb-6 aspect-video">
-            <div id="vturb-container" />
+            {/* Web Component oficial do VTurb */}
+            {(
+              <vturb-smartplayer
+                id="vid-68d49e092acbc9a1a749271b"
+                style={{ display: "block", margin: "0 auto", width: "100%", height: "100%", borderRadius: "8px" }}
+              />
+            ) as unknown as JSX.Element}
             <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in">
               ● AO VIVO
             </div>
