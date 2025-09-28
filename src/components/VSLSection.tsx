@@ -107,8 +107,8 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
         console.error("Error loading Vturb script:", error);
       };
 
-      // Adiciona o script ao head ao invés do container
-      document.head.appendChild(script);
+      // Adiciona o script dentro do container para que o player detecte o parent correto
+      playerDiv.appendChild(script);
       return true;
     };
 
