@@ -9,7 +9,8 @@ import { sanitizeHtml } from "@/lib/security";
 const WhatsAppResults = () => {
   const [searchParams] = useSearchParams();
   const rawPhoneNumber = searchParams.get('phone') || '+55 11 99999-9999';
-  const [currentStep, setCurrentStep] = useState<'loading' | 'vsl' | 'results'>('loading');
+  const skipSteps = searchParams.get('skip') === 'true';
+  const [currentStep, setCurrentStep] = useState<'loading' | 'vsl' | 'results'>(skipSteps ? 'results' : 'loading');
   
   // Sanitiza e valida o número de telefone da URL
   const sanitizedPhone = sanitizeHtml(rawPhoneNumber);
