@@ -146,7 +146,7 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
             )}
           </div>
 
-          <div className="relative bg-black rounded-lg overflow-hidden mb-4 sm:mb-6 aspect-video">
+          <div className="relative bg-black rounded-lg mb-4 sm:mb-6 aspect-video overflow-visible isolate">
             {/* Web Component oficial do VTurb */}
             {(
               <vturb-smartplayer
@@ -154,7 +154,7 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
                 style={{ display: "block", margin: "0 auto", width: "100%", height: "100%", borderRadius: "8px" }}
               />
             ) as unknown as JSX.Element}
-            <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in">
+            <div className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded text-xs animate-fade-in pointer-events-none z-10">
               ● AO VIVO
             </div>
           </div>
