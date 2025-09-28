@@ -75,15 +75,51 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
 
   // 👉 Injeta o player da Vturb dentro da div certa
   useEffect(() => {
-    const playerDiv = document.getElementById("vid-68d49e092acbc9a1a749271b");
+    const loadVturbPlayer = () => {
+      const playerDiv = document.getElementById("vid-68d49e092acbc9a1a749271b");
+      
+      if (!playerDiv) {
+        console.log("Player div not found, retrying...");
+        return false;
+      }
 
-    if (playerDiv && !document.getElementById("vturb-script")) {
+      // Remove script anterior se existir
+      const existingScript = document.getElementById("vturb-script");
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      // Limpa o container
+      playerDiv.innerHTML = "";
+
+      console.log("Loading Vturb player...");
+      
       const script = document.createElement("script");
       script.id = "vturb-script";
-      script.src =
-        "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
+      script.src = "https://scripts.converteai.net/90332a23-8844-4f31-aebf-ce6d72891446/players/68d49e092acbc9a1a749271b/v4/player.js";
       script.async = true;
-      playerDiv.appendChild(script); // 👈 garante que entra no container
+      
+      script.onload = () => {
+        console.log("Vturb script loaded successfully");
+      };
+      
+      script.onerror = (error) => {
+        console.error("Error loading Vturb script:", error);
+      };
+
+      // Adiciona o script ao head ao invés do container
+      document.head.appendChild(script);
+      return true;
+    };
+
+    // Tenta carregar imediatamente
+    if (!loadVturbPlayer()) {
+      // Se falhar, tenta novamente após um delay
+      const retryTimer = setTimeout(() => {
+        loadVturbPlayer();
+      }, 1000);
+
+      return () => clearTimeout(retryTimer);
     }
   }, []);
 

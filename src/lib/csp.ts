@@ -11,7 +11,10 @@ export const developmentCSP = {
     "'unsafe-inline'",
     "'unsafe-eval'",
     "https://scripts.converteai.net",
-    "https://cdn.converteai.net"
+    "https://cdn.converteai.net",
+    "https://*.converteai.net",
+    "https://player.vturb.com.br",
+    "https://*.vturb.com.br"
   ],
   'style-src': [
     "'self'", 
@@ -34,15 +37,25 @@ export const developmentCSP = {
   'connect-src': [
     "'self'",
     "https://api.vturb.com.br",
-    "https://scripts.converteai.net"
+    "https://*.vturb.com.br",
+    "https://scripts.converteai.net",
+    "https://*.converteai.net"
   ],
   'media-src': [
     "'self'",
-    "https://cdn.converteai.net"
+    "https://cdn.converteai.net",
+    "https://*.converteai.net",
+    "https://*.vturb.com.br",
+    "https://player.vturb.com.br"
   ],
   'object-src': ["'none'"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"],
+  'frame-src': [
+    "'self'",
+    "https://*.converteai.net",
+    "https://*.vturb.com.br"
+  ],
   'frame-ancestors': ["'none'"]
 };
 
@@ -52,7 +65,10 @@ export const productionCSP = {
   'script-src': [
     "'self'",
     "'sha256-[hash-here]'", // Replace with actual hashes
-    "https://scripts.converteai.net"
+    "https://scripts.converteai.net",
+    "https://*.converteai.net",
+    "https://player.vturb.com.br",
+    "https://*.vturb.com.br"
   ],
   'style-src': [
     "'self'",
@@ -72,15 +88,26 @@ export const productionCSP = {
   ],
   'connect-src': [
     "'self'",
-    "https://api.vturb.com.br"
+    "https://api.vturb.com.br",
+    "https://*.vturb.com.br",
+    "https://scripts.converteai.net",
+    "https://*.converteai.net"
   ],
   'media-src': [
     "'self'",
-    "https://cdn.converteai.net"
+    "https://cdn.converteai.net",
+    "https://*.converteai.net",
+    "https://*.vturb.com.br",
+    "https://player.vturb.com.br"
   ],
   'object-src': ["'none'"],
   'base-uri': ["'self'"],
   'form-action': ["'self'"],
+  'frame-src': [
+    "'self'",
+    "https://*.converteai.net",
+    "https://*.vturb.com.br"
+  ],
   'frame-ancestors': ["'none'"],
   'upgrade-insecure-requests': []
 };
@@ -104,7 +131,7 @@ export const generateCSPString = (cspConfig: Record<string, string[]>): string =
  */
 export const securityHeaders = {
   'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
+  'X-Frame-Options': 'SAMEORIGIN', // Mudando de DENY para SAMEORIGIN para permitir vídeos
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
