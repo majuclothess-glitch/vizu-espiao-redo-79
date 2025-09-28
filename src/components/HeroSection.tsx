@@ -4,19 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Shield, Smartphone, MessageCircle, Lock, Eye, CheckCircle, Gift, Clock, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-spy.jpg";
-import LoadingSteps from "@/components/LoadingSteps";
-import VSLSection from "@/components/VSLSection";
-import InvestigationResults from "@/components/InvestigationResults";
 import { validatePhone, formatPhoneForDisplay } from "@/lib/phoneValidation";
 import { globalRateLimiter, sanitizeHtml } from "@/lib/security";
 
 const HeroSection = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showPromoModal, setShowPromoModal] = useState(false);
-  const [currentStep, setCurrentStep] = useState<'form' | 'loading' | 'vsl' | 'results'>('form');
-  const [validatedPhone, setValidatedPhone] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const getCurrentDate = () => {
     return new Date().toLocaleDateString('pt-BR', {
@@ -101,39 +98,19 @@ const HeroSection = () => {
       return;
     }
 
-    // Store validated phone and start investigation
-    setValidatedPhone(validation.data);
-    setCurrentStep('loading');
+    // Navigate to results page with validated phone
+    const formattedPhone = formatPhoneForDisplay(validation.data);
+    navigate(`/whatsapp-results?phone=${encodeURIComponent(formattedPhone)}`);
     
     // Close promo modal if open
     setShowPromoModal(false);
   };
 
-  const handleLoadingComplete = () => {
-    setCurrentStep('vsl');
-  };
-
-  const handleVSLComplete = () => {
-    setCurrentStep('results');
-  };
-
-  // Render different steps
-  if (currentStep === 'loading') {
-    return <LoadingSteps phoneNumber={formatPhoneForDisplay(validatedPhone)} onComplete={handleLoadingComplete} />;
-  }
-
-  if (currentStep === 'vsl') {
-    return <VSLSection phoneNumber={formatPhoneForDisplay(validatedPhone)} onComplete={handleVSLComplete} />;
-  }
-
-  if (currentStep === 'results') {
-    return <InvestigationResults phoneNumber={formatPhoneForDisplay(validatedPhone)} />;
-  }
 
   return (
     <section className="relative min-h-screen bg-gradient-to-b from-background to-background/80 px-4 py-8 md:py-20">
-      {/* Mobile-first layout */}
-      <div className="container mx-auto max-w-md md:max-w-4xl relative z-10">
+      {/* Mobile-first layout with improved centering */}
+      <div className="container mx-auto max-w-sm sm:max-w-md md:max-w-4xl relative z-10 px-4 sm:px-6">
         
         {/* WhatsApp-style header */}
         <div className="text-center mb-8 md:mb-12">

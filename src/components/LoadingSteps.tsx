@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { CheckCircle, Loader2, Wifi, Shield, Search, Lock, Database, Eye } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
@@ -124,46 +124,46 @@ const LoadingSteps = ({ phoneNumber, onComplete }: LoadingStepsProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-background/80 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md mx-auto glass-card p-8">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-whatsapp rounded-full flex items-center justify-center animate-pulse">
-            <Loader2 className="w-8 h-8 text-white animate-spin" />
+    <div className="min-h-screen bg-gradient-to-b from-background to-background/80 flex items-center justify-center p-2 sm:p-4">
+      <Card className="w-full max-w-sm sm:max-w-md mx-auto glass-card p-4 sm:p-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 bg-gradient-whatsapp rounded-full flex items-center justify-center animate-pulse">
+            <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 text-white animate-spin" />
           </div>
           
-          <h2 className="text-xl font-bold text-foreground mb-2">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-2">
             Iniciando Investigação
           </h2>
           
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
             Conectando aos servidores seguros do WhatsApp
           </p>
           
-          <Progress value={progress} className="h-3 mb-6" />
+          <Progress value={progress} className="h-2 sm:h-3 mb-4 sm:mb-6" />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {stepsState.map((step, index) => (
-            <div key={step.id} className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
+            <div key={step.id} className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg transition-all duration-300 ${
               step.status === 'loading' ? 'bg-primary/10 border border-primary/30' :
               step.status === 'complete' ? 'bg-success/10 border border-success/30' :
               'bg-muted/50'
             }`}>
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${
+              <div className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full transition-all duration-300 ${
                 step.status === 'loading' ? 'bg-primary text-primary-foreground animate-pulse' :
                 step.status === 'complete' ? 'bg-success text-success-foreground' :
                 'bg-muted text-muted-foreground'
               }`}>
                 {step.status === 'loading' ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
                 ) : step.status === 'complete' ? (
-                  <CheckCircle className="w-4 h-4" />
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                 ) : (
-                  step.icon
+                  React.cloneElement(step.icon as React.ReactElement, { className: "w-3 h-3 sm:w-4 sm:h-4" })
                 )}
               </div>
               
-              <span className={`text-sm flex-1 transition-colors duration-300 ${
+              <span className={`text-xs sm:text-sm flex-1 transition-colors duration-300 ${
                 step.status === 'complete' ? 'text-success' :
                 step.status === 'loading' ? 'text-primary font-medium' :
                 'text-muted-foreground'
@@ -174,9 +174,9 @@ const LoadingSteps = ({ phoneNumber, onComplete }: LoadingStepsProps) => {
           ))}
         </div>
 
-        <div className="mt-8 text-center">
+        <div className="mt-6 sm:mt-8 text-center">
           <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-pulse"></div>
             <span>Conexão SSL Segura • 100% Anônimo</span>
           </div>
         </div>

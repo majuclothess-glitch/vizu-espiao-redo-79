@@ -346,8 +346,8 @@ const WhatsAppPreview = ({ phoneNumber }: WhatsAppPreviewProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#e5ddd5] p-2 md:p-4">
-      <div className="mx-auto max-w-sm md:max-w-4xl">
+    <div className="min-h-screen bg-[#e5ddd5] p-2 sm:p-4">
+      <div className="mx-auto max-w-sm sm:max-w-md lg:max-w-4xl">
         
         {/* Phone Number Header */}
         <div className="bg-white rounded-t-lg p-3 border-b border-gray-200 flex items-center justify-between">
