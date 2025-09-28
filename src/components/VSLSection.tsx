@@ -37,6 +37,10 @@ const VSLSection = ({ phoneNumber, onComplete }: VSLSectionProps) => {
       setProcessingProgress(prev => {
         if (prev >= 100) {
           clearInterval(processInterval);
+          // Quando o progresso chega a 100%, aguarda 3 segundos e vai para os resultados
+          setTimeout(() => {
+            onComplete();
+          }, 3000);
           return 100;
         }
         return prev + 0.5;
