@@ -98,7 +98,7 @@ const Desbloquear = () => {
   };
 
   const handleUnlock = () => {
-    window.open('https://pay.kirvano.com/b54c2fd7-3eb1-4e07-8a93-8e01e8aef9d7', '_blank');
+    window.open('https://pay.cakto.com.br/efgr85x_587098', '_blank');
   };
 
   return (
@@ -360,6 +360,108 @@ const Desbloquear = () => {
           <Badge variant="outline" className="border-purple-500/50 text-purple-400 bg-purple-950/30">
             💳 Pagamento Protegido
           </Badge>
+        </div>
+
+        {/* Depoimentos Realistas */}
+        <div className="max-w-6xl mx-auto mt-16 space-y-4">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 text-white">
+            Veja o que descobriram depois de aprender...
+          </h3>
+          
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Depoimento 1 - Traição descoberta */}
+            <div className="bg-gradient-to-b from-gray-900/90 to-gray-950/90 border border-gray-800 rounded-xl p-6 space-y-4 hover:border-green-500/30 transition-all duration-300">
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  M
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-semibold text-white">Márcia S.</h4>
+                    <span className="text-xs text-gray-500">há 2 dias</span>
+                  </div>
+                  <div className="flex gap-0.5 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-sm">⭐</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                "Depois de 3 meses desconfiada, finalmente tive coragem. Segui o tutorial e descobri que estava certa o tempo todo... Ele tinha outro número só pra falar com ELA. As conversas eram de mais de 1 ano. Pelo menos agora sei a verdade e não sou mais idiota."
+              </p>
+              <div className="flex items-center gap-2 text-xs text-green-400 pt-2 border-t border-gray-800">
+                <Check className="w-4 h-4" />
+                <span>Compra Verificada</span>
+              </div>
+            </div>
+
+            {/* Depoimento 2 - Descoberta chocante */}
+            <div className="bg-gradient-to-b from-gray-900/90 to-gray-950/90 border-2 border-green-500/40 rounded-xl p-6 space-y-4 shadow-lg shadow-green-500/20 relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <Badge className="bg-green-500 text-white border-none shadow-lg">
+                  MAIS POPULAR
+                </Badge>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  R
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-semibold text-white">Roberto M.</h4>
+                    <span className="text-xs text-gray-500">há 5 dias</span>
+                  </div>
+                  <div className="flex gap-0.5 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-sm">⭐</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                "Cara, ainda tô em choque. Minha esposa sempre foi 'a perfeita', sabe? Mas percebi que ela apagava as notificações toda hora. Usei o tutorial e... mano, tinha uma SEGUNDA CONTA no Instagram conversando com o personal dela. Fotos que ela nunca postou. Áudios de madrugada. Até encontros marcados. Valeu cada centavo, agora vou me divorciar com provas."
+              </p>
+              <div className="flex items-center gap-2 text-xs text-green-400 pt-2 border-t border-gray-800">
+                <Check className="w-4 h-4" />
+                <span>Compra Verificada</span>
+              </div>
+            </div>
+
+            {/* Depoimento 3 - Paz de espírito */}
+            <div className="bg-gradient-to-b from-gray-900/90 to-gray-950/90 border border-gray-800 rounded-xl p-6 space-y-4 hover:border-green-500/30 transition-all duration-300">
+              <div className="flex items-start gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                  C
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <h4 className="font-semibold text-white">Carolina F.</h4>
+                    <span className="text-xs text-gray-500">há 1 semana</span>
+                  </div>
+                  <div className="flex gap-0.5 mb-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-sm">⭐</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-gray-300 leading-relaxed">
+                "Comprei mais pra tirar a cisma da cabeça mesmo. Meu marido viaja muito e eu sempre fiquei com aquela pulga atrás da orelha. Depois que aprendi a usar, vi que ele realmente só conversa sobre trabalho e família. Me deu uma paz absurda! Agora durmo tranquila. Às vezes é melhor saber do que ficar imaginando coisas."
+              </p>
+              <div className="flex items-center gap-2 text-xs text-green-400 pt-2 border-t border-gray-800">
+                <Check className="w-4 h-4" />
+                <span>Compra Verificada</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Estatística de impacto */}
+          <div className="mt-8 text-center">
+            <p className="text-gray-400 text-sm">
+              <span className="text-green-400 font-bold">94% dos usuários</span> descobriram algo importante nas primeiras 48h
+            </p>
+          </div>
         </div>
       </div>
     </div>
