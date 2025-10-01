@@ -11,6 +11,7 @@ type Message = {
   type: 'text' | 'emoji' | 'image';
   blurred?: boolean;
   visible: boolean;
+  sender: 'sent' | 'received';
 };
 
 const Desbloquear = () => {
@@ -23,21 +24,22 @@ const Desbloquear = () => {
   const scrollRefRight = useRef<HTMLDivElement>(null);
 
   const messageSequence: Omit<Message, 'id' | 'visible'>[] = [
-    { text: "Oii", time: "22:15", type: "text" },
-    { text: "Tô com saudades...", time: "22:16", type: "text" },
-    { text: "Vai conseguir dar uma escapadinha hoje?", time: "22:17", type: "text" },
-    { text: "Já disse pra não me mandar msg aqui!", time: "22:19", type: "text" },
-    { text: "Desculpa amor", time: "22:20", type: "text" },
-    { text: "Mas é que estou louca de vontade de...", time: "22:21", type: "text" },
-    { text: "[Foto]", time: "22:22", type: "image", blurred: true },
-    { text: "😈🔥", time: "22:23", type: "emoji", blurred: true },
-    { text: "[Áudio 0:32]", time: "22:24", type: "text", blurred: true },
-    { text: "Gostou do que ouviu?", time: "22:25", type: "text", blurred: true },
-    { text: "Vou te mandar mais...", time: "22:26", type: "text", blurred: true },
-    { text: "[Foto]", time: "22:27", type: "image", blurred: true },
-    { text: "💦😏", time: "22:28", type: "emoji", blurred: true },
-    { text: "[Vídeo 0:15]", time: "22:29", type: "text", blurred: true },
-    { text: "Tô te esperando igual da última vez...", time: "22:30", type: "text", blurred: true },
+    { text: "Oii", time: "22:15", type: "text", sender: "received" },
+    { text: "Oi, tudo bem?", time: "22:16", type: "text", sender: "sent" },
+    { text: "Tô com saudades...", time: "22:17", type: "text", sender: "received" },
+    { text: "Vai conseguir dar uma escapadinha hoje?", time: "22:18", type: "text", sender: "received" },
+    { text: "Já disse pra não me mandar msg aqui!", time: "22:19", type: "text", sender: "sent" },
+    { text: "Desculpa amor 😔", time: "22:20", type: "text", sender: "received" },
+    { text: "Mas é que estou louca de vontade de...", time: "22:21", type: "text", sender: "received" },
+    { text: "[Foto]", time: "22:22", type: "image", sender: "received", blurred: true },
+    { text: "😈🔥", time: "22:23", type: "emoji", sender: "received", blurred: true },
+    { text: "[Áudio 0:32]", time: "22:24", type: "text", sender: "received", blurred: true },
+    { text: "Para com isso!", time: "22:25", type: "text", sender: "sent", blurred: true },
+    { text: "Gostou do que ouviu? 😏", time: "22:26", type: "text", sender: "received", blurred: true },
+    { text: "[Foto]", time: "22:27", type: "image", sender: "received", blurred: true },
+    { text: "💦😏", time: "22:28", type: "emoji", sender: "received", blurred: true },
+    { text: "[Vídeo 0:15]", time: "22:29", type: "text", sender: "received", blurred: true },
+    { text: "Tô te esperando igual da última vez...", time: "22:30", type: "text", sender: "received", blurred: true },
   ];
 
   useEffect(() => {
@@ -129,7 +131,11 @@ const Desbloquear = () => {
             <span className="text-white">VEJA AO VIVO:</span>
             <br />
             <span className="text-green-400 drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-              O CELULAR ESPERA, O OUTRO RESPONDE
+              TUDO QUE O CELULAR A ENVIA
+            </span>
+            <br />
+            <span className="text-green-400 drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]">
+              O CELULAR ESPELHO RECEBE EM TEMPO REAL
             </span>
           </h1>
           
@@ -172,12 +178,18 @@ const Desbloquear = () => {
                     {messages.map((msg, idx) => (
                       <div 
                         key={msg.id}
-                        className="bg-green-600/30 rounded-md md:rounded-lg p-1.5 md:p-2 ml-auto max-w-[85%] text-right animate-fade-in"
+                        className={`rounded-md md:rounded-lg p-1.5 md:p-2 max-w-[85%] animate-fade-in ${
+                          msg.sender === 'sent' 
+                            ? 'bg-green-600/30 ml-auto text-right' 
+                            : 'bg-gray-800/50 mr-auto text-left'
+                        }`}
                       >
                         {msg.blurred ? (
                           <div className="relative">
                             {msg.type === 'image' ? (
-                              <div className="w-full h-12 md:h-20 bg-green-700/30 rounded blur-md flex items-center justify-center relative">
+                              <div className={`w-full h-12 md:h-20 rounded blur-md flex items-center justify-center relative ${
+                                msg.sender === 'sent' ? 'bg-green-700/30' : 'bg-gray-700/30'
+                              }`}>
                                 <Lock className="w-2.5 h-2.5 md:w-3 md:h-3 text-red-400 animate-pulse absolute z-10" style={{ filter: 'blur(0)' }} />
                               </div>
                             ) : (
@@ -190,16 +202,16 @@ const Desbloquear = () => {
                             )}
                           </div>
                         ) : msg.type === 'image' ? (
-                          <div className="flex items-center justify-end gap-1.5">
+                          <div className={`flex items-center gap-1.5 ${msg.sender === 'sent' ? 'justify-end' : 'justify-start'}`}>
                             <Image className="w-3 h-3 md:w-4 md:h-4 text-green-300" />
-                            <p className="text-[9px] md:text-xs">Foto enviada</p>
+                            <p className="text-[9px] md:text-xs">Foto</p>
                           </div>
                         ) : (
                           <p className="text-[9px] md:text-xs">{msg.text}</p>
                         )}
-                        <div className="flex items-center justify-end gap-0.5 mt-0.5">
+                        <div className={`flex items-center gap-0.5 mt-0.5 ${msg.sender === 'sent' ? 'justify-end' : 'justify-start'}`}>
                           <span className="text-[7px] md:text-[10px] text-gray-400">{msg.time}</span>
-                          <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-blue-400" />
+                          {msg.sender === 'sent' && <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-blue-400" />}
                         </div>
                       </div>
                     ))}
@@ -295,6 +307,18 @@ const Desbloquear = () => {
               ESPELHO
             </div>
           </div>
+        </div>
+
+        {/* CTA após celulares */}
+        <div className="max-w-2xl mx-auto text-center mb-12">
+          <Button
+            onClick={handleUnlock}
+            size="lg"
+            className="w-full max-w-md mx-auto bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold text-base sm:text-lg md:text-xl px-4 sm:px-6 md:px-10 py-4 sm:py-5 md:py-6 rounded-xl shadow-2xl shadow-orange-500/50 hover:shadow-orange-500/70 hover:scale-105 transition-all duration-300 border-2 border-orange-400 flex items-center justify-center gap-2"
+          >
+            <Unlock className="w-5 h-5 md:w-6 md:h-6" />
+            <span className="leading-tight">QUERO VER O RESTO DA CONVERSA</span>
+          </Button>
         </div>
 
         {/* CTA Section */}
