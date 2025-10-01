@@ -23,12 +23,14 @@ const Desbloquear = () => {
   const messageSequence: Omit<Message, 'id' | 'visible'>[] = [
     { text: "Oi, tudo bem?", time: "14:32", type: "text" },
     { text: "Preciso falar contigo...", time: "14:33", type: "text" },
-    { text: "Onde você está?", time: "14:34", type: "text", blurred: true },
-    { text: "😘❤️", time: "14:35", type: "emoji", blurred: true },
-    { text: "[Foto]", time: "14:36", type: "image", blurred: true },
-    { text: "Você viu minha mensagem?", time: "14:37", type: "text" },
-    { text: "🤔", time: "14:38", type: "emoji", blurred: true },
-    { text: "Me liga quando puder", time: "14:39", type: "text", blurred: true },
+    { text: "Onde você está?", time: "14:34", type: "text" },
+    { text: "😘❤️", time: "14:35", type: "emoji" },
+    { text: "[Foto]", time: "14:36", type: "image" },
+    { text: "Você viu minha mensagem?", time: "14:37", type: "text", blurred: true },
+    { text: "🤔💭", time: "14:38", type: "emoji", blurred: true },
+    { text: "[Foto]", time: "14:39", type: "image", blurred: true },
+    { text: "Me liga quando puder...", time: "14:40", type: "text", blurred: true },
+    { text: "❤️😍", time: "14:41", type: "emoji", blurred: true },
   ];
 
   useEffect(() => {
@@ -111,9 +113,13 @@ const Desbloquear = () => {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-red-400 font-semibold animate-pulse">
+          <Button
+            onClick={handleUnlock}
+            size="lg"
+            className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold text-lg md:text-2xl px-6 md:px-10 py-4 md:py-6 rounded-xl shadow-2xl shadow-red-500/50 hover:shadow-red-500/70 hover:scale-105 transition-all duration-300 border-2 border-red-400 animate-pulse"
+          >
             🔥 DESBLOQUEIE O TUTORIAL AGORA
-          </p>
+          </Button>
         </div>
 
         {/* Mockups de celular */}
@@ -128,7 +134,7 @@ const Desbloquear = () => {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 h-3 md:h-4 bg-gray-900 rounded-b-lg md:rounded-b-xl" />
                 </div>
                 
-                <div className="p-2 md:p-3 space-y-1.5 md:space-y-2 min-h-[280px] md:min-h-[400px]">
+                <div className="p-2 md:p-3 flex flex-col h-[280px] md:h-[400px]">
                   <div className="text-center text-[8px] md:text-[10px] text-gray-500 mb-2 md:mb-3">Dispositivo A — Enviando...</div>
                   
                   <div className="flex items-center gap-1.5 md:gap-2 pb-1.5 md:pb-2 border-b border-gray-800">
@@ -141,13 +147,28 @@ const Desbloquear = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1 md:space-y-1.5 overflow-hidden">
+                  <div className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                     {messages.map((msg, idx) => (
                       <div 
                         key={msg.id}
                         className="bg-green-600/30 rounded-md md:rounded-lg p-1.5 md:p-2 ml-auto max-w-[85%] text-right animate-fade-in"
                       >
-                        {msg.type === 'image' ? (
+                        {msg.blurred ? (
+                          <div className="relative">
+                            {msg.type === 'image' ? (
+                              <div className="w-full h-12 md:h-20 bg-green-700/30 rounded blur-md flex items-center justify-center relative">
+                                <Lock className="w-2.5 h-2.5 md:w-3 md:h-3 text-red-400 animate-pulse absolute z-10" style={{ filter: 'blur(0)' }} />
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-[9px] md:text-xs blur-sm select-none opacity-40">{msg.text}</p>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <Lock className="w-2 h-2 md:w-2.5 md:h-2.5 text-red-400 animate-pulse" style={{ filter: 'blur(0)' }} />
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ) : msg.type === 'image' ? (
                           <div className="flex items-center justify-end gap-1.5">
                             <Image className="w-3 h-3 md:w-4 md:h-4 text-green-300" />
                             <p className="text-[9px] md:text-xs">Foto enviada</p>
@@ -186,7 +207,7 @@ const Desbloquear = () => {
                   <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 h-3 md:h-4 bg-gray-900 rounded-b-lg md:rounded-b-xl" />
                 </div>
                 
-                <div className="p-2 md:p-3 space-y-1.5 md:space-y-2 min-h-[280px] md:min-h-[400px] relative">
+                <div className="p-2 md:p-3 flex flex-col h-[280px] md:h-[400px] relative">
                   <div className="text-center text-[8px] md:text-[10px] text-gray-500 mb-2 md:mb-3">Dispositivo B — Espelhando...</div>
                   
                   <div className="flex items-center gap-1.5 md:gap-2 pb-1.5 md:pb-2 border-b border-gray-800">
@@ -199,7 +220,7 @@ const Desbloquear = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-1 md:space-y-1.5 overflow-hidden">
+                  <div className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
                     {messages.map((msg, idx) => (
                       <div 
                         key={`mirror-${msg.id}`}
@@ -209,14 +230,14 @@ const Desbloquear = () => {
                         {msg.blurred ? (
                           <div className="relative">
                             {msg.type === 'image' ? (
-                              <div className="w-full h-16 md:h-24 bg-gray-700/50 rounded blur-lg flex items-center justify-center">
-                                <Lock className="w-3 h-3 md:w-4 md:h-4 text-red-400 animate-pulse absolute" />
+                              <div className="w-full h-12 md:h-20 bg-gray-700/50 rounded blur-md flex items-center justify-center relative">
+                                <Lock className="w-2.5 h-2.5 md:w-3 md:h-3 text-red-400 animate-pulse absolute z-10" style={{ filter: 'blur(0)' }} />
                               </div>
                             ) : (
                               <>
                                 <p className="text-[9px] md:text-xs blur-sm select-none opacity-40">{msg.text}</p>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                  <Lock className="w-2.5 h-2.5 md:w-3 md:h-3 text-red-400 animate-pulse" />
+                                  <Lock className="w-2 h-2 md:w-2.5 md:h-2.5 text-red-400 animate-pulse" style={{ filter: 'blur(0)' }} />
                                 </div>
                               </>
                             )}
@@ -244,7 +265,7 @@ const Desbloquear = () => {
                     )}
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black via-black/80 to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
