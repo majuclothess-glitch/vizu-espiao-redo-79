@@ -130,12 +130,10 @@ const Desbloquear = () => {
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="text-white">VEJA AO VIVO:</span>
             <br />
-            <span className="text-green-400 drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-              TUDO QUE O CELULAR A ENVIA
-            </span>
+            <span className="text-blue-400">UM CELULAR ENVIA,</span>
             <br />
             <span className="text-green-400 drop-shadow-[0_0_30px_rgba(34,197,94,0.5)]">
-              O CELULAR ESPELHO RECEBE EM TEMPO REAL
+              O OUTRO RECEBE NA HORA
             </span>
           </h1>
           
@@ -307,18 +305,6 @@ const Desbloquear = () => {
               ESPELHO
             </div>
           </div>
-        </div>
-
-        {/* CTA após celulares */}
-        <div className="max-w-2xl mx-auto text-center mb-12">
-          <Button
-            onClick={handleUnlock}
-            size="lg"
-            className="w-full max-w-md mx-auto bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold text-base sm:text-lg md:text-xl px-4 sm:px-6 md:px-10 py-4 sm:py-5 md:py-6 rounded-xl shadow-2xl shadow-orange-500/50 hover:shadow-orange-500/70 hover:scale-105 transition-all duration-300 border-2 border-orange-400 flex items-center justify-center gap-2"
-          >
-            <Unlock className="w-5 h-5 md:w-6 md:h-6" />
-            <span className="leading-tight">QUERO VER O RESTO DA CONVERSA</span>
-          </Button>
         </div>
 
         {/* CTA Section */}
