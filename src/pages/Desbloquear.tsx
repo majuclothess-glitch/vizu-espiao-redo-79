@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Smartphone, Lock, Unlock, Zap, Clock, Eye, Image, Check } from "lucide-react";
@@ -19,18 +19,21 @@ const Desbloquear = () => {
   const [pulseEffect, setPulseEffect] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const scrollRefLeft = useRef<HTMLDivElement>(null);
+  const scrollRefRight = useRef<HTMLDivElement>(null);
 
   const messageSequence: Omit<Message, 'id' | 'visible'>[] = [
-    { text: "Oi, tudo bem?", time: "14:32", type: "text" },
-    { text: "Preciso falar contigo...", time: "14:33", type: "text" },
-    { text: "Onde você está?", time: "14:34", type: "text" },
-    { text: "😘❤️", time: "14:35", type: "emoji" },
-    { text: "[Foto]", time: "14:36", type: "image" },
-    { text: "Você viu minha mensagem?", time: "14:37", type: "text", blurred: true },
-    { text: "🤔💭", time: "14:38", type: "emoji", blurred: true },
-    { text: "[Foto]", time: "14:39", type: "image", blurred: true },
-    { text: "Me liga quando puder...", time: "14:40", type: "text", blurred: true },
-    { text: "❤️😍", time: "14:41", type: "emoji", blurred: true },
+    { text: "Oi amor, tudo bem?", time: "21:15", type: "text" },
+    { text: "Tô com saudade...", time: "21:16", type: "text" },
+    { text: "Vem aqui em casa?", time: "21:17", type: "text" },
+    { text: "😏💋", time: "21:18", type: "emoji" },
+    { text: "[Foto]", time: "21:19", type: "image" },
+    { text: "Gostou do que viu?", time: "21:20", type: "text", blurred: true },
+    { text: "Tô te esperando...", time: "21:21", type: "text", blurred: true },
+    { text: "🔥😈", time: "21:22", type: "emoji", blurred: true },
+    { text: "[Foto]", time: "21:23", type: "image", blurred: true },
+    { text: "Não demora, tá?", time: "21:24", type: "text", blurred: true },
+    { text: "❤️‍🔥💦", time: "21:25", type: "emoji", blurred: true },
   ];
 
   useEffect(() => {
@@ -58,16 +61,29 @@ const Desbloquear = () => {
         };
         setMessages(prev => [...prev, newMessage]);
         setCurrentMessageIndex(prev => prev + 1);
-      }, 2500);
+      }, 2000);
       return () => clearTimeout(timer);
     } else {
       const resetTimer = setTimeout(() => {
         setMessages([]);
         setCurrentMessageIndex(0);
-      }, 5000);
+      }, 4000);
       return () => clearTimeout(resetTimer);
     }
   }, [currentMessageIndex]);
+
+  useEffect(() => {
+    if (scrollRefLeft.current) {
+      scrollRefLeft.current.scrollTop = scrollRefLeft.current.scrollHeight;
+    }
+    if (scrollRefRight.current) {
+      setTimeout(() => {
+        if (scrollRefRight.current) {
+          scrollRefRight.current.scrollTop = scrollRefRight.current.scrollHeight;
+        }
+      }, 300);
+    }
+  }, [messages]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -116,9 +132,10 @@ const Desbloquear = () => {
           <Button
             onClick={handleUnlock}
             size="lg"
-            className="bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold text-lg md:text-2xl px-6 md:px-10 py-4 md:py-6 rounded-xl shadow-2xl shadow-red-500/50 hover:shadow-red-500/70 hover:scale-105 transition-all duration-300 border-2 border-red-400 animate-pulse"
+            className="w-full max-w-md mx-auto bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-bold text-base sm:text-lg md:text-xl lg:text-2xl px-4 sm:px-6 md:px-10 py-4 sm:py-5 md:py-6 rounded-xl shadow-2xl shadow-red-500/50 hover:shadow-red-500/70 hover:scale-105 transition-all duration-300 border-2 border-red-400 animate-pulse flex items-center justify-center gap-2"
           >
-            🔥 DESBLOQUEIE O TUTORIAL AGORA
+            <span className="text-xl sm:text-2xl">🔥</span>
+            <span className="leading-tight">DESBLOQUEIE O TUTORIAL AGORA</span>
           </Button>
         </div>
 
@@ -147,7 +164,7 @@ const Desbloquear = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                  <div ref={scrollRefLeft} className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent scroll-smooth">
                     {messages.map((msg, idx) => (
                       <div 
                         key={msg.id}
@@ -220,7 +237,7 @@ const Desbloquear = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+                  <div ref={scrollRefRight} className="flex-1 overflow-y-auto space-y-1 md:space-y-1.5 mt-2 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent scroll-smooth">
                     {messages.map((msg, idx) => (
                       <div 
                         key={`mirror-${msg.id}`}
