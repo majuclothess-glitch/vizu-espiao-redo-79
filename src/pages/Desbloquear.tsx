@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Smartphone, Lock, Unlock, Zap, Clock, Eye, Image, Check } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Smartphone, Lock, Unlock, Zap, Clock, Eye, Image, Check, ArrowRight, Play, Star, Users, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 type Message = {
@@ -110,14 +111,16 @@ const Desbloquear = () => {
       <div className="fixed inset-0 bg-gradient-radial from-green-500/10 via-transparent to-transparent opacity-30 animate-pulse" />
 
       <div className="relative z-10 container mx-auto px-4 py-8 md:py-16">
-        {/* Timer de urgência */}
+        {/* Timer de urgência - Mais dramático */}
         <div className="flex justify-center mb-8">
-          <div className={`bg-red-600/20 border-2 border-red-500 rounded-lg px-6 py-3 flex items-center gap-3 ${pulseEffect ? 'animate-pulse' : ''}`}>
-            <Clock className="w-5 h-5 text-red-400" />
-            <div className="text-center">
-              <div className="text-xs text-red-300 mb-1">OFERTA EXPIRA EM:</div>
-              <div className="text-2xl font-bold text-red-400 font-mono">{formatTime(timeLeft)}</div>
+          <div className={`relative bg-gradient-to-r from-red-600/30 to-orange-600/30 border-2 border-red-500 rounded-2xl px-8 py-4 flex items-center gap-4 shadow-2xl shadow-red-500/50 ${pulseEffect ? 'scale-105' : 'scale-100'} transition-transform duration-300`}>
+            <div className="absolute inset-0 bg-red-500/10 rounded-2xl animate-pulse" />
+            <Clock className="w-6 h-6 md:w-8 md:h-8 text-red-400 animate-spin-slow relative z-10" style={{ animationDuration: '3s' }} />
+            <div className="text-center relative z-10">
+              <div className="text-xs md:text-sm text-red-300 mb-1 font-semibold tracking-wider">⚠️ OFERTA EXPIRA EM:</div>
+              <div className="text-3xl md:text-4xl font-bold text-red-400 font-mono tracking-wider drop-shadow-[0_0_10px_rgba(248,113,113,0.8)]">{formatTime(timeLeft)}</div>
             </div>
+            <Zap className="w-6 h-6 md:w-8 md:h-8 text-yellow-400 animate-pulse relative z-10" />
           </div>
         </div>
 
@@ -147,8 +150,35 @@ const Desbloquear = () => {
           </Button>
         </div>
 
+        {/* Estatísticas */}
+        <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto mb-8">
+          <div className="text-center bg-gradient-to-b from-blue-950/50 to-transparent border border-blue-500/30 rounded-lg p-3 md:p-4">
+            <Users className="w-6 h-6 md:w-8 md:h-8 text-blue-400 mx-auto mb-2" />
+            <div className="text-xl md:text-3xl font-bold text-blue-400">12.847</div>
+            <div className="text-[10px] md:text-xs text-gray-400 mt-1">Pessoas já descobriram</div>
+          </div>
+          <div className="text-center bg-gradient-to-b from-green-950/50 to-transparent border border-green-500/30 rounded-lg p-3 md:p-4">
+            <Star className="w-6 h-6 md:w-8 md:h-8 text-yellow-400 mx-auto mb-2" />
+            <div className="text-xl md:text-3xl font-bold text-yellow-400">4.9/5</div>
+            <div className="text-[10px] md:text-xs text-gray-400 mt-1">Avaliação média</div>
+          </div>
+          <div className="text-center bg-gradient-to-b from-purple-950/50 to-transparent border border-purple-500/30 rounded-lg p-3 md:p-4">
+            <Shield className="w-6 h-6 md:w-8 md:h-8 text-purple-400 mx-auto mb-2" />
+            <div className="text-xl md:text-3xl font-bold text-purple-400">100%</div>
+            <div className="text-[10px] md:text-xs text-gray-400 mt-1">Seguro e anônimo</div>
+          </div>
+        </div>
+
         {/* Mockups de celular */}
-        <div className="grid grid-cols-2 gap-3 md:gap-8 max-w-5xl mx-auto mb-12">
+        <div className="relative grid grid-cols-2 gap-3 md:gap-8 max-w-5xl mx-auto mb-12">
+          {/* Indicador de sincronização animado */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col items-center gap-2">
+            <ArrowRight className="w-8 h-8 text-green-400 animate-pulse" />
+            <div className="bg-green-500/20 border border-green-400 rounded-full px-3 py-1 backdrop-blur-sm">
+              <span className="text-[10px] font-bold text-green-400 animate-pulse">SINCRONIZANDO</span>
+            </div>
+            <ArrowRight className="w-8 h-8 text-green-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
+          </div>
           {/* Phone Esquerdo - Origem */}
           <div className="relative group">
             <div className="absolute -inset-0.5 md:-inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl md:rounded-2xl blur-md md:blur-lg opacity-60 group-hover:opacity-80 transition duration-1000 animate-pulse" />
@@ -304,6 +334,110 @@ const Desbloquear = () => {
             <div className="text-center mt-2 md:mt-3 text-[9px] md:text-xs text-green-300 font-semibold tracking-wider">
               ESPELHO
             </div>
+          </div>
+        </div>
+
+        {/* Vídeo thumbnail */}
+        <div className="max-w-2xl mx-auto mb-12">
+          <div className="relative group cursor-pointer" onClick={handleUnlock}>
+            <div className="absolute inset-0 bg-gradient-to-r from-red-500/50 to-orange-500/50 rounded-2xl blur-xl opacity-60 group-hover:opacity-80 transition-opacity" />
+            <div className="relative bg-gradient-to-br from-gray-900 to-black border-2 border-red-500/50 rounded-2xl overflow-hidden">
+              <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative">
+                {/* Thumbnail fake */}
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMxYTFhMWEiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20" />
+                
+                {/* Play button */}
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full flex items-center justify-center shadow-2xl shadow-red-500/50 group-hover:scale-110 transition-transform border-4 border-white/20">
+                    <Play className="w-10 h-10 md:w-12 md:h-12 text-white ml-1" fill="white" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-lg md:text-2xl font-bold text-white mb-1">▶️ Assista o Tutorial Completo</div>
+                    <div className="text-sm md:text-base text-gray-300">Passo a passo detalhado (3:47)</div>
+                  </div>
+                </div>
+
+                {/* Badge ao vivo */}
+                <div className="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-2 animate-pulse">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                  TUTORIAL LIBERADO
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Depoimentos */}
+        <div className="max-w-5xl mx-auto mb-12">
+          <h3 className="text-2xl md:text-3xl font-bold text-center text-white mb-6">
+            O que estão dizendo sobre o método
+          </h3>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardContent className="pt-6">
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-300 mb-4">
+                  "Descobri que minha suspeita estava certa. O método funciona perfeitamente e é muito fácil de usar."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-blue-400">MC</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Maria C.</div>
+                    <div className="text-xs text-gray-500">São Paulo, SP</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardContent className="pt-6">
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-300 mb-4">
+                  "Incrível! Em menos de 5 minutos já estava vendo tudo. Valeu cada centavo."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-green-400">RS</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Roberto S.</div>
+                    <div className="text-xs text-gray-500">Rio de Janeiro, RJ</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gray-900/50 border-gray-800">
+              <CardContent className="pt-6">
+                <div className="flex gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm text-gray-300 mb-4">
+                  "Melhor investimento que fiz. Agora sei a verdade e posso tomar minhas decisões."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                    <span className="text-sm font-bold text-purple-400">AF</span>
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-white">Ana F.</div>
+                    <div className="text-xs text-gray-500">Belo Horizonte, MG</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
