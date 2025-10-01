@@ -1,19 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Smartphone, Lock, Unlock, Zap, Clock, Eye } from "lucide-react";
+import { Smartphone, Lock, Unlock, Zap, Clock, Eye, Image, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+type Message = {
+  id: number;
+  text: string;
+  time: string;
+  type: 'text' | 'emoji' | 'image';
+  blurred?: boolean;
+  visible: boolean;
+};
 
 const Desbloquear = () => {
   const navigate = useNavigate();
-  const [timeLeft, setTimeLeft] = useState(15 * 60); // 15 minutos em segundos
+  const [timeLeft, setTimeLeft] = useState(15 * 60);
   const [pulseEffect, setPulseEffect] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
+  const messageSequence: Omit<Message, 'id' | 'visible'>[] = [
+    { text: "Oi, tudo bem?", time: "14:32", type: "text" },
+    { text: "Preciso falar contigo...", time: "14:33", type: "text" },
+    { text: "Onde você está?", time: "14:34", type: "text", blurred: true },
+    { text: "😘❤️", time: "14:35", type: "emoji", blurred: true },
+    { text: "[Foto]", time: "14:36", type: "image", blurred: true },
+    { text: "Você viu minha mensagem?", time: "14:37", type: "text" },
+    { text: "🤔", time: "14:38", type: "emoji", blurred: true },
+    { text: "Me liga quando puder", time: "14:39", type: "text", blurred: true },
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -22,9 +43,29 @@ const Desbloquear = () => {
       setPulseEffect(true);
       setTimeout(() => setPulseEffect(false), 1000);
     }, 3000);
-
     return () => clearInterval(pulse);
   }, []);
+
+  useEffect(() => {
+    if (currentMessageIndex < messageSequence.length) {
+      const timer = setTimeout(() => {
+        const newMessage: Message = {
+          ...messageSequence[currentMessageIndex],
+          id: currentMessageIndex,
+          visible: true,
+        };
+        setMessages(prev => [...prev, newMessage]);
+        setCurrentMessageIndex(prev => prev + 1);
+      }, 2500);
+      return () => clearTimeout(timer);
+    } else {
+      const resetTimer = setTimeout(() => {
+        setMessages([]);
+        setCurrentMessageIndex(0);
+      }, 5000);
+      return () => clearTimeout(resetTimer);
+    }
+  }, [currentMessageIndex]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -76,133 +117,140 @@ const Desbloquear = () => {
         </div>
 
         {/* Mockups de celular */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto mb-12">
+        <div className="grid grid-cols-2 gap-3 md:gap-8 max-w-5xl mx-auto mb-12">
           {/* Phone Esquerdo - Origem */}
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 transition duration-1000 animate-pulse" />
+            <div className="absolute -inset-0.5 md:-inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl md:rounded-2xl blur-md md:blur-lg opacity-60 group-hover:opacity-80 transition duration-1000 animate-pulse" />
             
-            <div className="relative bg-gray-900 rounded-2xl p-2 border-2 border-blue-400/60 shadow-2xl">
-              <div className="bg-black rounded-xl overflow-hidden">
-                {/* Notch */}
-                <div className="h-4 bg-black relative">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-4 bg-gray-900 rounded-b-xl" />
+            <div className="relative bg-gray-900 rounded-xl md:rounded-2xl p-1 md:p-2 border border-blue-400/60 md:border-2 shadow-2xl">
+              <div className="bg-black rounded-lg md:rounded-xl overflow-hidden">
+                <div className="h-3 md:h-4 bg-black relative">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 h-3 md:h-4 bg-gray-900 rounded-b-lg md:rounded-b-xl" />
                 </div>
                 
-                {/* Screen content */}
-                <div className="p-3 space-y-2 min-h-[380px]">
-                  <div className="text-center text-[10px] text-gray-500 mb-3">Dispositivo A — Enviando...</div>
+                <div className="p-2 md:p-3 space-y-1.5 md:space-y-2 min-h-[280px] md:min-h-[400px]">
+                  <div className="text-center text-[8px] md:text-[10px] text-gray-500 mb-2 md:mb-3">Dispositivo A — Enviando...</div>
                   
-                  {/* WhatsApp header */}
-                  <div className="flex items-center gap-2 pb-2 border-b border-gray-800">
-                    <div className="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center">
-                      <Smartphone className="w-3.5 h-3.5 text-green-400" />
+                  <div className="flex items-center gap-1.5 md:gap-2 pb-1.5 md:pb-2 border-b border-gray-800">
+                    <div className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <Smartphone className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-green-400" />
                     </div>
                     <div>
-                      <div className="font-semibold text-xs">Contato Origem</div>
-                      <div className="text-[10px] text-green-400">online</div>
+                      <div className="font-semibold text-[9px] md:text-xs">Contato Origem</div>
+                      <div className="text-[7px] md:text-[10px] text-green-400">online</div>
                     </div>
                   </div>
 
-                  {/* Messages */}
-                  <div className="space-y-1.5">
-                    <div className="bg-green-600/30 rounded-lg p-2 ml-auto max-w-[80%] text-right">
-                      <p className="text-xs">Oi, tudo bem?</p>
-                      <span className="text-[10px] text-gray-400">14:32</span>
-                    </div>
-                    <div className="bg-green-600/30 rounded-lg p-2 ml-auto max-w-[80%] text-right">
-                      <p className="text-xs">Preciso falar contigo...</p>
-                      <span className="text-[10px] text-gray-400">14:33</span>
-                    </div>
-                    <div className="bg-green-600/30 rounded-lg p-2 ml-auto max-w-[80%] text-right">
-                      <p className="text-xs">Onde você está?</p>
-                      <span className="text-[10px] text-gray-400">14:34</span>
-                    </div>
-                    <div className="bg-green-600/30 rounded-lg p-2 ml-auto max-w-[80%] text-right animate-pulse">
-                      <p className="text-xs">Digitando...</p>
-                      <span className="text-[10px] text-gray-400">agora</span>
-                    </div>
+                  <div className="space-y-1 md:space-y-1.5 overflow-hidden">
+                    {messages.map((msg, idx) => (
+                      <div 
+                        key={msg.id}
+                        className="bg-green-600/30 rounded-md md:rounded-lg p-1.5 md:p-2 ml-auto max-w-[85%] text-right animate-fade-in"
+                      >
+                        {msg.type === 'image' ? (
+                          <div className="flex items-center justify-end gap-1.5">
+                            <Image className="w-3 h-3 md:w-4 md:h-4 text-green-300" />
+                            <p className="text-[9px] md:text-xs">Foto enviada</p>
+                          </div>
+                        ) : (
+                          <p className="text-[9px] md:text-xs">{msg.text}</p>
+                        )}
+                        <div className="flex items-center justify-end gap-0.5 mt-0.5">
+                          <span className="text-[7px] md:text-[10px] text-gray-400">{msg.time}</span>
+                          <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-blue-400" />
+                        </div>
+                      </div>
+                    ))}
+                    {messages.length > 0 && messages.length < messageSequence.length && (
+                      <div className="bg-green-600/20 rounded-md md:rounded-lg p-1.5 md:p-2 ml-auto max-w-[60%] text-right animate-pulse">
+                        <p className="text-[9px] md:text-xs text-gray-400">digitando...</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="text-center mt-3 text-xs text-blue-300 font-semibold tracking-wider">
-              DISPOSITIVO A
+            <div className="text-center mt-2 md:mt-3 text-[9px] md:text-xs text-blue-300 font-semibold tracking-wider">
+              ORIGEM
             </div>
           </div>
 
           {/* Phone Direito - Espelho */}
           <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl blur-lg opacity-60 group-hover:opacity-80 transition duration-1000 animate-pulse" />
+            <div className="absolute -inset-0.5 md:-inset-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl md:rounded-2xl blur-md md:blur-lg opacity-60 group-hover:opacity-80 transition duration-1000 animate-pulse" />
             
-            <div className="relative bg-gray-900 rounded-2xl p-2 border-2 border-green-400/60 shadow-2xl">
-              <div className="bg-black rounded-xl overflow-hidden relative">
-                {/* Notch */}
-                <div className="h-4 bg-black relative">
-                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-4 bg-gray-900 rounded-b-xl" />
+            <div className="relative bg-gray-900 rounded-xl md:rounded-2xl p-1 md:p-2 border border-green-400/60 md:border-2 shadow-2xl">
+              <div className="bg-black rounded-lg md:rounded-xl overflow-hidden relative">
+                <div className="h-3 md:h-4 bg-black relative">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 md:w-20 h-3 md:h-4 bg-gray-900 rounded-b-lg md:rounded-b-xl" />
                 </div>
                 
-                {/* Screen content */}
-                <div className="p-3 space-y-2 min-h-[380px] relative">
-                  <div className="text-center text-[10px] text-gray-500 mb-3">Dispositivo B — Recebendo (simulação)</div>
+                <div className="p-2 md:p-3 space-y-1.5 md:space-y-2 min-h-[280px] md:min-h-[400px] relative">
+                  <div className="text-center text-[8px] md:text-[10px] text-gray-500 mb-2 md:mb-3">Dispositivo B — Espelhando...</div>
                   
-                  {/* WhatsApp header */}
-                  <div className="flex items-center gap-2 pb-2 border-b border-gray-800">
-                    <div className="w-7 h-7 rounded-full bg-green-500/20 flex items-center justify-center">
-                      <Eye className="w-3.5 h-3.5 text-green-400" />
+                  <div className="flex items-center gap-1.5 md:gap-2 pb-1.5 md:pb-2 border-b border-gray-800">
+                    <div className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <Eye className="w-2.5 h-2.5 md:w-3.5 md:h-3.5 text-green-400 animate-pulse" />
                     </div>
                     <div>
-                      <div className="font-semibold text-xs">Contato Espelhado</div>
-                      <div className="text-[10px] text-green-400">online</div>
+                      <div className="font-semibold text-[9px] md:text-xs">Contato Espelhado</div>
+                      <div className="text-[7px] md:text-[10px] text-green-400">online</div>
                     </div>
                   </div>
 
-                  {/* Messages (parcialmente borradas) */}
-                  <div className="space-y-1.5">
-                    <div className="bg-gray-800/50 rounded-lg p-2 max-w-[80%]">
-                      <div className="relative">
-                        <p className="text-xs blur-md select-none opacity-50">Oi, tudo bem?</p>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-3 h-3 text-red-400" />
-                        </div>
+                  <div className="space-y-1 md:space-y-1.5 overflow-hidden">
+                    {messages.map((msg, idx) => (
+                      <div 
+                        key={`mirror-${msg.id}`}
+                        className="bg-gray-800/50 rounded-md md:rounded-lg p-1.5 md:p-2 max-w-[85%] animate-fade-in"
+                        style={{ animationDelay: '0.3s' }}
+                      >
+                        {msg.blurred ? (
+                          <div className="relative">
+                            {msg.type === 'image' ? (
+                              <div className="w-full h-16 md:h-24 bg-gray-700/50 rounded blur-lg flex items-center justify-center">
+                                <Lock className="w-3 h-3 md:w-4 md:h-4 text-red-400 animate-pulse absolute" />
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-[9px] md:text-xs blur-sm select-none opacity-40">{msg.text}</p>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <Lock className="w-2.5 h-2.5 md:w-3 md:h-3 text-red-400 animate-pulse" />
+                                </div>
+                              </>
+                            )}
+                            <span className="text-[7px] md:text-[10px] text-gray-500 block mt-0.5">{msg.time}</span>
+                          </div>
+                        ) : (
+                          <>
+                            {msg.type === 'image' ? (
+                              <div className="flex items-center gap-1.5">
+                                <Image className="w-3 h-3 md:w-4 md:h-4 text-gray-400" />
+                                <p className="text-[9px] md:text-xs">Foto</p>
+                              </div>
+                            ) : (
+                              <p className="text-[9px] md:text-xs">{msg.text}</p>
+                            )}
+                            <span className="text-[7px] md:text-[10px] text-gray-400 block mt-0.5">{msg.time}</span>
+                          </>
+                        )}
                       </div>
-                      <span className="text-[10px] text-gray-500">14:32</span>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 max-w-[80%]">
-                      <p className="text-xs">Preciso falar contigo...</p>
-                      <span className="text-[10px] text-gray-400">14:33</span>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 max-w-[80%]">
-                      <div className="relative">
-                        <p className="text-xs blur-md select-none opacity-50">Onde você está?</p>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-3 h-3 text-red-400" />
-                        </div>
+                    ))}
+                    {messages.length > 0 && messages.length < messageSequence.length && (
+                      <div className="bg-gray-800/30 rounded-md md:rounded-lg p-1.5 md:p-2 max-w-[60%] animate-pulse" style={{ animationDelay: '0.3s' }}>
+                        <p className="text-[9px] md:text-xs text-gray-500">recebendo...</p>
                       </div>
-                      <span className="text-[10px] text-gray-500">14:34</span>
-                    </div>
-                    
-                    <div className="bg-gray-800/50 rounded-lg p-2 max-w-[80%]">
-                      <div className="relative">
-                        <p className="text-xs blur-md select-none opacity-50">████████████</p>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Lock className="w-3 h-3 text-red-400 animate-pulse" />
-                        </div>
-                      </div>
-                      <span className="text-[10px] text-gray-500">agora</span>
-                    </div>
+                    )}
                   </div>
 
-                  {/* Overlay de bloqueio */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
             
-            <div className="text-center mt-3 text-xs text-green-300 font-semibold tracking-wider">
-              DISPOSITIVO B (ESPELHO)
+            <div className="text-center mt-2 md:mt-3 text-[9px] md:text-xs text-green-300 font-semibold tracking-wider">
+              ESPELHO
             </div>
           </div>
         </div>
