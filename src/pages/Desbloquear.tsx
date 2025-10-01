@@ -23,17 +23,21 @@ const Desbloquear = () => {
   const scrollRefRight = useRef<HTMLDivElement>(null);
 
   const messageSequence: Omit<Message, 'id' | 'visible'>[] = [
-    { text: "Oi amor, tudo bem?", time: "21:15", type: "text" },
-    { text: "Tô com saudade...", time: "21:16", type: "text" },
-    { text: "Vem aqui em casa?", time: "21:17", type: "text" },
-    { text: "😏💋", time: "21:18", type: "emoji" },
-    { text: "[Foto]", time: "21:19", type: "image" },
-    { text: "Gostou do que viu?", time: "21:20", type: "text", blurred: true },
-    { text: "Tô te esperando...", time: "21:21", type: "text", blurred: true },
-    { text: "🔥😈", time: "21:22", type: "emoji", blurred: true },
-    { text: "[Foto]", time: "21:23", type: "image", blurred: true },
-    { text: "Não demora, tá?", time: "21:24", type: "text", blurred: true },
-    { text: "❤️‍🔥💦", time: "21:25", type: "emoji", blurred: true },
+    { text: "Oii", time: "22:15", type: "text" },
+    { text: "Tô com saudades...", time: "22:16", type: "text" },
+    { text: "Vai conseguir dar uma escapadinha hoje?", time: "22:17", type: "text" },
+    { text: "Já disse pra não me mandar msg aqui!", time: "22:19", type: "text" },
+    { text: "Desculpa amor", time: "22:20", type: "text" },
+    { text: "Mas é que estou louca de vontade de...", time: "22:21", type: "text" },
+    { text: "[Foto]", time: "22:22", type: "image", blurred: true },
+    { text: "😈🔥", time: "22:23", type: "emoji", blurred: true },
+    { text: "[Áudio 0:32]", time: "22:24", type: "text", blurred: true },
+    { text: "Gostou do que ouviu?", time: "22:25", type: "text", blurred: true },
+    { text: "Vou te mandar mais...", time: "22:26", type: "text", blurred: true },
+    { text: "[Foto]", time: "22:27", type: "image", blurred: true },
+    { text: "💦😏", time: "22:28", type: "emoji", blurred: true },
+    { text: "[Vídeo 0:15]", time: "22:29", type: "text", blurred: true },
+    { text: "Tô te esperando igual da última vez...", time: "22:30", type: "text", blurred: true },
   ];
 
   useEffect(() => {
@@ -61,13 +65,13 @@ const Desbloquear = () => {
         };
         setMessages(prev => [...prev, newMessage]);
         setCurrentMessageIndex(prev => prev + 1);
-      }, 2000);
+      }, 1800);
       return () => clearTimeout(timer);
     } else {
       const resetTimer = setTimeout(() => {
         setMessages([]);
         setCurrentMessageIndex(0);
-      }, 4000);
+      }, 5000);
       return () => clearTimeout(resetTimer);
     }
   }, [currentMessageIndex]);
